@@ -1,4 +1,5 @@
 import time
+import requests
 from Quartz import (
     CGWindowListCopyWindowInfo,
     kCGWindowListOptionOnScreenOnly,
@@ -32,4 +33,14 @@ if __name__ == "__main__":
     while True:
         title, app = get_active_window()
         print(f"APP: {app} | TITLE: {title}")
+        payload= {
+            "app_name": app,
+            "window_title": title
+        }
+        try:
+            requests.post("http://127.0.0.1:5000/log",json=payload,timeout=1)
+        except:
+            pass
         time.sleep(2)
+
+
