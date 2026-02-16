@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import datetime 
+from datetime import datetime, timezone 
 
 DB_NAME = "backend/database.db"
 
@@ -60,5 +60,38 @@ def create_tables():
 if __name__ == "__main__":
     create_tables()
     print("DB Ready")
+def create_session():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        INSERT INTO sessions (start_time)
+        VALUES (?)
+    """, (datetime.now(timezone.utc).isoformat(),))
+
+    session_id = cur.lastrowid
+
+    conn.commit()
+    conn.close()
+
+    return session_id
+
+def end_session(session_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE sessions
+        SET end_time = ?
+        WHERE id = ?
+    """, (
+        datetime.now(timezone.utc).isoformat(),
+        session_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+
 
 
