@@ -1,7 +1,9 @@
 import sqlite3
-from datetime import datetime, timezone 
+import os
+from datetime import datetime, timezone
 
-DB_NAME = "backend/database.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "database.db")
 
 def get_connection():
     return sqlite3.connect(DB_NAME)
@@ -91,6 +93,7 @@ def end_session(session_id):
 
     conn.commit()
     conn.close()
+create_tables()
 
 
 
