@@ -1,5 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
+from classifier import predict
 from flask import Flask, request, jsonify
 from db import insert_activity,create_session,end_session
+
 
 app = Flask(__name__)
 @app.route("/start", methods=["POST"])
@@ -22,7 +27,12 @@ def log_activity():
     if session_id is None:
         return jsonify({"error": "session_id required"}), 400
 
-    insert_activity(session_id, app_name, window_title)
+    app_window = app_name+" "+window_title
+    prediction = predict(app_window)
+
+   
+
+    insert_activity(session_id, app_name, window_title,prediction)
 
     return jsonify({"status": "ok"})
 @app.route("/stop", methods=["POST"])

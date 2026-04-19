@@ -7,7 +7,7 @@ DB_NAME = os.path.join(BASE_DIR, "database.db")
 
 def get_connection():
     return sqlite3.connect(DB_NAME)
-def insert_activity(session_id, app_name, window_title):
+def insert_activity(session_id, app_name, window_title,predicted_label):
     conn = get_connection()
     cur = conn.cursor()
 
@@ -16,14 +16,16 @@ def insert_activity(session_id, app_name, window_title):
             session_id,
             timestamp,
             window_title,
-            app_name
+            app_name,
+            predicted_label
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
     """, (
         session_id,
         datetime.utcnow().isoformat(),
         window_title,
-        app_name
+        app_name,
+        predicted_label
     ))
 
     conn.commit()

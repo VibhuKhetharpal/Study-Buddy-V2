@@ -18,12 +18,12 @@ def train(data_path):
     model=LogisticRegression()
     model.fit(tfidf_matrix,Y)#train on label
 
-    joblib.dump(model,"MODEL_PATH")
-    joblib.dump(tfidf_Vectorizer,"VECTORIZER_PATH")
+    joblib.dump(model,MODEL_PATH)
+    joblib.dump(tfidf_Vectorizer,VECTORIZER_PATH)
 
 def predict(X):
-    tfidf_vectorizer=joblib.load("VECTORIZER_PATH")
-    model=joblib.load("MODEL_PATH")
+    tfidf_vectorizer=joblib.load(VECTORIZER_PATH)
+    model=joblib.load(MODEL_PATH)
     tfidf_matrix=tfidf_vectorizer.transform([X])
     return model.predict(tfidf_matrix)[0]
 
