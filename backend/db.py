@@ -31,6 +31,21 @@ def insert_activity(session_id, app_name, window_title,predicted_label):
     conn.commit()
     conn.close()
 
+def update_user_label(log_id,user_label):
+    conn = get_connection()
+    cur=conn.cursor()
+
+    cur.execute("""
+        UPDATE activity_logs 
+        SET
+        user_label=?
+        WHERE
+        id=?
+        """,(user_label,log_id))
+    
+    conn.commit()
+    conn.close()
+
 
 def create_tables():
     conn = get_connection()
