@@ -2,8 +2,9 @@ import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
 from classifier import predict
-from flask import Flask, request, jsonify
-from db import insert_activity,create_session,end_session,update_user_label
+from flask import Flask, request, jsonify,render_template
+from db import insert_activity,create_session,end_session,update_user_label,get_stats
+
 
 
 app = Flask(__name__)
@@ -66,6 +67,16 @@ def stop_session():
     end_session(session_id)
 
     return jsonify({"status": "stopped"})
+
+
+
+@app.route('/stats')
+def stats():
+    return jsonify(get_stats())
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
     
 
 

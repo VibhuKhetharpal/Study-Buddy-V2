@@ -112,6 +112,30 @@ def end_session(session_id):
     conn.close()
 create_tables()
 
+def get_stats():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    
+    total = conn.execute("SELECT COUNT(*) FROM activity_logs").fetchone()[0]
+    study = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE predicted_label='study'").fetchone()[0]
+    distract = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE predicted_label='distract'").fetchone()[0]
+    corrected = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE user_label IS NOT NULL").fetchone()[0]
+    mistakes = conn.execute(
+        "SELECT COUNT(*) FROM activity_logs WHERE user_label IS NOT NULL AND user_label != predicted_label"
+    ).fetchone()[0]
+    recent = conn.execute(
+        "SELECT id, app_name, window_title, predicted_label, user_label FROM activity_logs ORDER BY id DESC LIMIT 20"
+    ).fetchall()
+
+    conn.close()
+    return {
+        "total": total,
+        "study": study,
+        "distract": distract,
+        "corrected": corrected,
+        "mistakes": mistakes,
+        "recent": [dict(r) for r in recent]
+    }
 
 
 
