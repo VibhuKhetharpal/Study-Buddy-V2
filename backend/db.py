@@ -31,21 +31,27 @@ def insert_activity(session_id, app_name, window_title,predicted_label):
     conn.commit()
     conn.close()
 
-def update_user_label(log_id,user_label):
+def update_user_label(log_id, user_label):
     conn = get_connection()
-    cur=conn.cursor()
-
-    cur.execute("""
-        UPDATE activity_logs 
-        SET
-        user_label=?
-        WHERE
-        id=?
-        """,(user_label,log_id))
+    
+    # get the window_title and session_id of this log
+    row = conn.execute(
+        "SELECT window_title, session_id FROM activity_logs WHERE id=?",
+        (log_id,)
+    ).fetchone()
+    
+    if row:
+        window_title, session_id = row
+        # update ALL rows with same window_title in same session
+        conn.execute("""
+            UPDATE activity_logs 
+            SET user_label=?
+            WHERE window_title=? AND session_id=?
+        """, (user_label, window_title, session_id))
     
     conn.commit()
     conn.close()
-    
+
 def get_labelled_data():
     conn = get_connection()
     rows = conn.execute(
@@ -106,18 +112,21 @@ def create_session():
 def end_session(session_id):
     conn = get_connection()
     cur = conn.cursor()
-
     cur.execute("""
-        UPDATE sessions
-        SET end_time = ?
-        WHERE id = ?
-    """, (
-        datetime.now(timezone.utc).isoformat(),
-        session_id
-    ))
-
+        UPDATE sessions SET end_time=? WHERE id=?
+    """, (datetime.now(timezone.utc).isoformat(), session_id))
     conn.commit()
+
+    study = conn.execute(
+        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND predicted_label='study'",
+        (session_id,)
+    ).fetchone()[0]
+    distract = conn.execute(
+        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND predicted_label='distract'",
+        (session_id,)
+    ).fetchone()[0]
     conn.close()
+    return {"study": study, "distract": distract}
 create_tables()
 
 def get_stats():
@@ -144,6 +153,43 @@ def get_stats():
         "mistakes": mistakes,
         "recent": [dict(r) for r in recent]
     }
+
+def get_sessions():
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    sessions = conn.execute("""
+        SELECT 
+            s.id,
+            s.start_time,
+            s.end_time,
+            COUNT(a.id) as total,
+            SUM(CASE WHEN a.predicted_label='study' THEN 1 ELSE 0 END) as study,
+            SUM(CASE WHEN a.predicted_label='distract' THEN 1 ELSE 0 END) as distract
+        FROM sessions s
+        LEFT JOIN activity_logs a ON a.session_id = s.id
+        GROUP BY s.id
+        ORDER BY s.id DESC
+    """).fetchall()
+    conn.close()
+    return [dict(s) for s in sessions]
+
+def get_session_logs(session_id):
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("""
+        SELECT id, app_name, window_title, predicted_label, user_label 
+        FROM activity_logs 
+        WHERE session_id=? AND predicted_label IS NOT NULL
+        ORDER BY id DESC
+    """, (session_id,)).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+def get_latest_session_id():
+    conn = get_connection()
+    row = conn.execute("SELECT id FROM sessions ORDER BY id DESC LIMIT 1").fetchone()
+    conn.close()
+    return row[0] if row else None
 
 
 

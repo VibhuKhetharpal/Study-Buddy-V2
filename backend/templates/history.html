@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Buddy — History</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'JetBrains Mono', monospace; background: #0d1117; color: #e6edf3; padding: 2rem; }
+    nav { display: flex; gap: 1.5rem; margin-bottom: 2rem; }
+    nav a { font-size: 0.8rem; color: #8b949e; text-decoration: none; letter-spacing: 0.05em; }
+    nav a.active { color: #7ee787; }
+    nav a:hover { color: #e6edf3; }
+    h1 { font-size: 1.2rem; font-weight: 500; color: #7ee787; margin-bottom: 2rem; letter-spacing: 0.05em; }
+    .session-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; }
+    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .session-id { font-size: 0.75rem; color: #8b949e; }
+    .session-time { font-size: 0.7rem; color: #484f58; }
+    .session-stats { display: flex; gap: 1.5rem; }
+    .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+    .stat .label { font-size: 0.65rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.08em; }
+    .stat .value { font-size: 1.2rem; font-weight: 500; }
+    .green { color: #7ee787; }
+    .red { color: #f85149; }
+    .yellow { color: #e3b341; }
+    .focus-bar { margin-top: 0.75rem; height: 4px; background: #21262d; border-radius: 2px; overflow: hidden; }
+    .focus-fill { height: 100%; background: #7ee787; border-radius: 2px; transition: width 0.4s ease; }
+    .empty { color: #484f58; font-size: 0.85rem; margin-top: 2rem; }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="/dashboard">dashboard</a>
+    <a href="/history" class="active">history</a>
+  </nav>
+
+  <h1>study_buddy / history</h1>
+
+  <div id="sessions-list"></div>
+
+  <script>
+    function formatTime(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleString();
+    }
+
+    function duration(start, end) {
+      if (!start || !end) return '—';
+      const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
+      const m = Math.floor(diff / 60);
+      const s = diff % 60;
+      return m > 0 ? `${m}m ${s}s` : `${s}s`;
+    }
+
+    fetch('/sessions')
+      .then(r => r.json())
+      .then(sessions => {
+        const container = document.getElementById('sessions-list');
+        if (sessions.length === 0) {
+          container.innerHTML = '<div class="empty">No sessions yet.</div>';
+          return;
+        }
+        sessions.forEach(s => {
+          const total = (s.study || 0) + (s.distract || 0);
+          const focusPct = total > 0 ? Math.round((s.study / total) * 100) : 0;
+          const card = document.createElement('div');
+          card.className = 'session-card';
+          card.innerHTML = `
+            <div class="session-header">
+              <span class="session-id">session #${s.id}</span>
+              <span class="session-time">${formatTime(s.start_time)} → ${s.end_time ? formatTime(s.end_time) : 'ongoing'} (${duration(s.start_time, s.end_time)})</span>
+            </div>
+            <div class="session-stats">
+              <div class="stat"><div class="label">Total Logs</div><div class="value">${total}</div></div>
+              <div class="stat"><div class="label">Study</div><div class="value green">${s.study || 0}</div></div>
+              <div class="stat"><div class="label">Distract</div><div class="value red">${s.distract || 0}</div></div>
+              <div class="stat"><div class="label">Focus</div><div class="value yellow">${focusPct}%</div></div>
+            </div>
+            <div class="focus-bar"><div class="focus-fill" style="width:${focusPct}%"></div></div>
+          `;
+          container.appendChild(card);
+        });
+      });
+  </script>
+</body>
+</html>
