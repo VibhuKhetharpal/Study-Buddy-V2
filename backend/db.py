@@ -45,6 +45,14 @@ def update_user_label(log_id,user_label):
     
     conn.commit()
     conn.close()
+    
+def get_labelled_data():
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT window_title, user_label FROM activity_logs WHERE user_label IS NOT NULL"
+    ).fetchall()
+    conn.close()
+    return [{"text": row[0], "label": row[1]} for row in rows]
 
 
 def create_tables():

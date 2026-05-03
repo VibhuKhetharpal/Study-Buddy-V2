@@ -27,6 +27,34 @@ def predict(X):
     tfidf_matrix=tfidf_vectorizer.transform([X])
     return model.predict(tfidf_matrix)[0]
 
+def retrain(data_path):
+    import sys
+    sys.path.append(os.path.join(BASE_DIR, '..', 'backend'))
+    from db import get_labelled_data
+
+    # load seed data
+    df_seed = pd.read_csv(data_path)
+    
+    # load user corrections from DB
+    user_data = get_labelled_data()
+    df_user = pd.DataFrame(user_data)
+
+    # combine
+    df = pd.concat([df_seed, df_user], ignore_index=True)
+
+    X = df['text']
+    Y = df['label']
+
+    vectorizer = TfidfVectorizer()
+    matrix = vectorizer.fit_transform(X)
+    model = LogisticRegression()
+    model.fit(matrix, Y)
+
+    joblib.dump(model, MODEL_PATH)
+    joblib.dump(vectorizer, VECTORIZER_PATH)
+    
+    return len(df_user)  # how many user labels were used
+
 if __name__ == "__main__":
     data_path=os.path.join(BASE_DIR,"..","data","seed_data.csv")
     train(data_path)

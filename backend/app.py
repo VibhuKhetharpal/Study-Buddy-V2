@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
-from classifier import predict
+from classifier import predict,retrain
 from flask import Flask, request, jsonify,render_template
 from db import insert_activity,create_session,end_session,update_user_label,get_stats
 
@@ -16,14 +16,26 @@ def start_session():
     return jsonify({
         "session_id": session_id
     })
+
+DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'seed_data.csv')
+
+@app.route('/retrain', methods=['POST'])
+def retrain_model():
+    count = retrain(DATA_PATH)
+    return jsonify({"status": "ok", "user_labels_used": count})
+
+
 @app.route("/log", methods=["POST"])
 def log_activity():
-
     data = request.json
 
     session_id = data.get("session_id")
     app_name = data.get("app_name")
     window_title = data.get("window_title")
+
+    if not window_title or window_title.strip() == "":
+    return jsonify({"status": "skipped"}), 200
+
 
     if session_id is None:
         return jsonify({"error": "session_id required"}), 400
