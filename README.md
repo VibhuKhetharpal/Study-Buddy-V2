@@ -21,6 +21,7 @@ A productivity tracker that monitors your active window titles, classifies activ
 
 ## Project Structure
 
+```
 Study-Buddy-V2/
 ├── agent/
 │   ├── mac_tracker.py        # macOS window tracker
@@ -37,7 +38,7 @@ Study-Buddy-V2/
     ├── classifier.py         # TF-IDF + LR train/predict/retrain
     ├── model.pkl             # Trained model
     └── vectorizer.pkl        # Trained vectorizer
-
+```
 ## Setup
 
 git clone https://github.com/yourusername/Study-Buddy-V2.git
