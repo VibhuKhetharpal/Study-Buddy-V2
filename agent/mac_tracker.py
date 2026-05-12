@@ -1,3 +1,9 @@
+# mac_tracker.py
+# Tracks active window titles on macOS using osascript.
+# Sends logs to the Flask backend every time the window changes.
+# Triggers a desktop notification after 30 seconds of continuous distraction.
+
+
 import time
 import requests
 import subprocess
