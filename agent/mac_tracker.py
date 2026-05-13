@@ -2,6 +2,7 @@
 # Tracks active window titles on macOS using osascript.
 # Sends logs to the Flask backend every time the window changes.
 # Triggers a desktop notification after 30 seconds of continuous distraction.
+# Not being updated as of right now windows tracker is a priority 
 
 
 import time
