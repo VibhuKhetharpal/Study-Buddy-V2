@@ -25,7 +25,7 @@
     .app-name { font-size: 0.8rem; font-weight: 500; color: #e6edf3; flex: 1; }
     .app-switch-count { font-size: 0.7rem; color: #8b949e; }
     .window-list { border-top: 1px solid #21262d; display: none; }
-    .window-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 1rem 0.55rem 2rem; border-bottom: 1px solid #0d1117; user-select: none; }
+    .window-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 1rem 0.55rem 2rem; border-bottom: 1px solid #0d1117; }
     .window-row:hover { background: #1c2128; }
     .window-header { display: flex; align-items: center; gap: 0.75rem; flex: 1; cursor: pointer; min-width: 0; }
     .window-chevron { font-size: 0.55rem; color: #484f58; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
@@ -150,7 +150,6 @@
         body: JSON.stringify({ session_id: sessionId, window_title: windowTitle, label })
       }).then(r => r.json()).then(d => {
         if (d.success) {
-          // update all ts-badge and buttons inside this window group
           winGroup.querySelectorAll('.ts-row').forEach(tsRow => {
             const mismatch = label !== tsRow.dataset.predicted;
             const badge = tsRow.querySelector('.ts-badge');
@@ -159,11 +158,9 @@
             tsRow.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
             tsRow.querySelector(`.btn-${label}`).classList.add('active');
           });
-          // update window row badge
           const winBadge = winGroup.querySelector('.win-badge');
           winBadge.className = `badge win-badge ${label}`;
           winBadge.textContent = label;
-          // update bulk buttons active state
           winGroup.querySelectorAll('.bulk-btn').forEach(b => b.classList.remove('active'));
           winGroup.querySelector(`.bulk-btn-${label}`).classList.add('active');
         }
@@ -191,13 +188,13 @@
 
         const appRow = document.createElement('div');
         appRow.className = 'app-row';
-        appRow.onclick = () => toggleApp(appRow);
         appRow.innerHTML = `
           <span class="app-chevron ${appOpen ? 'open' : ''}">▶</span>
           <span class="app-name">${appData.name}</span>
           <span class="app-switch-count">${allEntries.length}x</span>
           <span class="badge ${dominant}">${dominant}</span>
         `;
+        appRow.addEventListener('click', () => toggleApp(appRow));
         appGroup.appendChild(appRow);
 
         const winList = document.createElement('div');
@@ -217,20 +214,34 @@
 
           const winRow = document.createElement('div');
           winRow.className = 'window-row';
-          winRow.innerHTML = `
-            <div class="window-header" onclick="toggleWindow(this)">
-              <span class="window-chevron ${winOpen ? 'open' : ''}">▶</span>
-              <span class="window-title" title="${winData.title}">${winData.title}</span>
-              <span class="window-switch-count">${winData.entries.length}x</span>
-              <span class="badge win-badge ${winDominant}">${winDominant}</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn btn-study bulk-btn bulk-btn-study ${allStudy ? 'active' : ''}"
-                onclick="bulkLabel(event, ${currentSessionId}, ${JSON.stringify(winData.title)}, 'study', this.closest('.window-group'))">all study</button>
-              <button class="btn btn-distract bulk-btn bulk-btn-distract ${allDistract ? 'active' : ''}"
-                onclick="bulkLabel(event, ${currentSessionId}, ${JSON.stringify(winData.title)}, 'distract', this.closest('.window-group'))">all distract</button>
-            </div>
+
+          const winHeader = document.createElement('div');
+          winHeader.className = 'window-header';
+          winHeader.innerHTML = `
+            <span class="window-chevron ${winOpen ? 'open' : ''}">▶</span>
+            <span class="window-title" title="${winData.title}">${winData.title}</span>
+            <span class="window-switch-count">${winData.entries.length}x</span>
+            <span class="badge win-badge ${winDominant}">${winDominant}</span>
           `;
+          winHeader.addEventListener('click', () => toggleWindow(winHeader));
+
+          const btnGroup = document.createElement('div');
+          btnGroup.className = 'btn-group';
+
+          const btnStudy = document.createElement('button');
+          btnStudy.className = `btn btn-study bulk-btn bulk-btn-study ${allStudy ? 'active' : ''}`;
+          btnStudy.textContent = 'all study';
+          btnStudy.addEventListener('click', (e) => bulkLabel(e, currentSessionId, winData.title, 'study', winGroup));
+
+          const btnDistract = document.createElement('button');
+          btnDistract.className = `btn btn-distract bulk-btn bulk-btn-distract ${allDistract ? 'active' : ''}`;
+          btnDistract.textContent = 'all distract';
+          btnDistract.addEventListener('click', (e) => bulkLabel(e, currentSessionId, winData.title, 'distract', winGroup));
+
+          btnGroup.appendChild(btnStudy);
+          btnGroup.appendChild(btnDistract);
+          winRow.appendChild(winHeader);
+          winRow.appendChild(btnGroup);
           winGroup.appendChild(winRow);
 
           const tsList = document.createElement('div');
@@ -240,20 +251,41 @@
           winData.entries.forEach(entry => {
             const label = entry.user_label || entry.predicted_label;
             const mismatch = entry.user_label && entry.user_label !== entry.predicted_label;
+
             const tsRow = document.createElement('div');
             tsRow.className = 'ts-row';
             tsRow.dataset.predicted = entry.predicted_label;
-            tsRow.innerHTML = `
-              <span class="ts-dot"></span>
-              <span class="ts-time">${fmtTime(entry.timestamp)}</span>
-              <span class="badge ts-badge ${mismatch ? 'mismatch' : label}">${label}${mismatch ? ' !' : ''}</span>
-              <div class="btn-group">
-                <button class="btn btn-study ${entry.user_label === 'study' ? 'active' : ''}"
-                  onclick="applyLabel(event, ${entry.id}, 'study', this.closest('.ts-row'))">study</button>
-                <button class="btn btn-distract ${entry.user_label === 'distract' ? 'active' : ''}"
-                  onclick="applyLabel(event, ${entry.id}, 'distract', this.closest('.ts-row'))">distract</button>
-              </div>
-            `;
+
+            const dot = document.createElement('span');
+            dot.className = 'ts-dot';
+
+            const time = document.createElement('span');
+            time.className = 'ts-time';
+            time.textContent = fmtTime(entry.timestamp);
+
+            const badge = document.createElement('span');
+            badge.className = `badge ts-badge ${mismatch ? 'mismatch' : label}`;
+            badge.textContent = label + (mismatch ? ' !' : '');
+
+            const tsBtnGroup = document.createElement('div');
+            tsBtnGroup.className = 'btn-group';
+
+            const bStudy = document.createElement('button');
+            bStudy.className = `btn btn-study ${entry.user_label === 'study' ? 'active' : ''}`;
+            bStudy.textContent = 'study';
+            bStudy.addEventListener('click', (e) => applyLabel(e, entry.id, 'study', tsRow));
+
+            const bDistract = document.createElement('button');
+            bDistract.className = `btn btn-distract ${entry.user_label === 'distract' ? 'active' : ''}`;
+            bDistract.textContent = 'distract';
+            bDistract.addEventListener('click', (e) => applyLabel(e, entry.id, 'distract', tsRow));
+
+            tsBtnGroup.appendChild(bStudy);
+            tsBtnGroup.appendChild(bDistract);
+            tsRow.appendChild(dot);
+            tsRow.appendChild(time);
+            tsRow.appendChild(badge);
+            tsRow.appendChild(tsBtnGroup);
             tsList.appendChild(tsRow);
           });
 

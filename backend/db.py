@@ -177,10 +177,10 @@ def get_session_logs(session_id):
     conn = get_connection()
     conn.row_factory = sqlite3.Row
     rows = conn.execute("""
-        SELECT id, app_name, window_title, predicted_label, user_label 
+        SELECT id, app_name, window_title, predicted_label, user_label, timestamp
         FROM activity_logs 
         WHERE session_id=? AND predicted_label IS NOT NULL
-        ORDER BY id DESC
+        ORDER BY id ASC
     """, (session_id,)).fetchall()
     conn.close()
     return [dict(r) for r in rows]
@@ -190,6 +190,16 @@ def get_latest_session_id():
     row = conn.execute("SELECT id FROM sessions ORDER BY id DESC LIMIT 1").fetchone()
     conn.close()
     return row[0] if row else None
+
+def bulk_label_window(session_id, window_title, user_label):
+    conn = get_connection()
+    conn.execute("""
+        UPDATE activity_logs
+        SET user_label=?
+        WHERE session_id=? AND window_title=?
+    """, (user_label, session_id, window_title))
+    conn.commit()
+    conn.close()
 
 
 

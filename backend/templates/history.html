@@ -177,7 +177,7 @@
 
         const appRow = document.createElement('div');
         appRow.className = 'app-row';
-        appRow.onclick = () => toggleApp(appRow);
+        appRow.addEventListener('click', () => toggleApp(appRow));
         appRow.innerHTML = `
           <span class="app-chevron">▶</span>
           <span class="app-name">${appData.name}</span>
@@ -199,20 +199,34 @@
 
           const winRow = document.createElement('div');
           winRow.className = 'window-row';
-          winRow.innerHTML = `
-            <div class="window-header" onclick="toggleWindow(this)">
-              <span class="window-chevron">▶</span>
-              <span class="window-title" title="${winData.title}">${winData.title}</span>
-              <span class="window-switch-count">${winData.entries.length}x</span>
-              <span class="badge win-badge ${winDominant}">${winDominant}</span>
-            </div>
-            <div class="btn-group">
-              <button class="btn btn-study bulk-btn bulk-btn-study ${allStudy ? 'active' : ''}"
-                onclick="bulkLabel(event, ${sessionId}, ${JSON.stringify(winData.title)}, 'study', this.closest('.window-group'))">all study</button>
-              <button class="btn btn-distract bulk-btn bulk-btn-distract ${allDistract ? 'active' : ''}"
-                onclick="bulkLabel(event, ${sessionId}, ${JSON.stringify(winData.title)}, 'distract', this.closest('.window-group'))">all distract</button>
-            </div>
+
+          const winHeader = document.createElement('div');
+          winHeader.className = 'window-header';
+          winHeader.innerHTML = `
+            <span class="window-chevron">▶</span>
+            <span class="window-title" title="${winData.title}">${winData.title}</span>
+            <span class="window-switch-count">${winData.entries.length}x</span>
+            <span class="badge win-badge ${winDominant}">${winDominant}</span>
           `;
+          winHeader.addEventListener('click', () => toggleWindow(winHeader));
+
+          const btnGroup = document.createElement('div');
+          btnGroup.className = 'btn-group';
+
+          const btnStudy = document.createElement('button');
+          btnStudy.className = `btn btn-study bulk-btn bulk-btn-study ${allStudy ? 'active' : ''}`;
+          btnStudy.textContent = 'all study';
+          btnStudy.addEventListener('click', (e) => bulkLabel(e, sessionId, winData.title, 'study', winGroup));
+
+          const btnDistract = document.createElement('button');
+          btnDistract.className = `btn btn-distract bulk-btn bulk-btn-distract ${allDistract ? 'active' : ''}`;
+          btnDistract.textContent = 'all distract';
+          btnDistract.addEventListener('click', (e) => bulkLabel(e, sessionId, winData.title, 'distract', winGroup));
+
+          btnGroup.appendChild(btnStudy);
+          btnGroup.appendChild(btnDistract);
+          winRow.appendChild(winHeader);
+          winRow.appendChild(btnGroup);
           winGroup.appendChild(winRow);
 
           const tsList = document.createElement('div');
@@ -221,20 +235,41 @@
           winData.entries.forEach(entry => {
             const label = entry.user_label || entry.predicted_label;
             const mismatch = entry.user_label && entry.user_label !== entry.predicted_label;
+
             const tsRow = document.createElement('div');
             tsRow.className = 'ts-row';
             tsRow.dataset.predicted = entry.predicted_label;
-            tsRow.innerHTML = `
-              <span class="ts-dot"></span>
-              <span class="ts-time">${new Date(entry.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'})}</span>
-              <span class="badge ts-badge ${mismatch ? 'mismatch' : label}">${label}${mismatch ? ' !' : ''}</span>
-              <div class="btn-group">
-                <button class="btn btn-study ${entry.user_label === 'study' ? 'active' : ''}"
-                  onclick="applyLabel(event, ${entry.id}, 'study', this.closest('.ts-row'))">study</button>
-                <button class="btn btn-distract ${entry.user_label === 'distract' ? 'active' : ''}"
-                  onclick="applyLabel(event, ${entry.id}, 'distract', this.closest('.ts-row'))">distract</button>
-              </div>
-            `;
+
+            const dot = document.createElement('span');
+            dot.className = 'ts-dot';
+
+            const time = document.createElement('span');
+            time.className = 'ts-time';
+            time.textContent = new Date(entry.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+
+            const badge = document.createElement('span');
+            badge.className = `badge ts-badge ${mismatch ? 'mismatch' : label}`;
+            badge.textContent = label + (mismatch ? ' !' : '');
+
+            const tsBtnGroup = document.createElement('div');
+            tsBtnGroup.className = 'btn-group';
+
+            const bStudy = document.createElement('button');
+            bStudy.className = `btn btn-study ${entry.user_label === 'study' ? 'active' : ''}`;
+            bStudy.textContent = 'study';
+            bStudy.addEventListener('click', (e) => applyLabel(e, entry.id, 'study', tsRow));
+
+            const bDistract = document.createElement('button');
+            bDistract.className = `btn btn-distract ${entry.user_label === 'distract' ? 'active' : ''}`;
+            bDistract.textContent = 'distract';
+            bDistract.addEventListener('click', (e) => applyLabel(e, entry.id, 'distract', tsRow));
+
+            tsBtnGroup.appendChild(bStudy);
+            tsBtnGroup.appendChild(bDistract);
+            tsRow.appendChild(dot);
+            tsRow.appendChild(time);
+            tsRow.appendChild(badge);
+            tsRow.appendChild(tsBtnGroup);
             tsList.appendChild(tsRow);
           });
 
@@ -298,7 +333,7 @@
         const logsDiv = document.createElement('div');
         logsDiv.className = 'session-logs';
 
-        header.onclick = () => toggleSession(header, s.id, logsDiv);
+        header.addEventListener('click', () => toggleSession(header, s.id, logsDiv));
 
         const focusBar = document.createElement('div');
         focusBar.className = 'focus-bar';

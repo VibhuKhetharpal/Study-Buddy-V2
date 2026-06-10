@@ -3,7 +3,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
 from classifier import predict,retrain
 from flask import Flask, request, jsonify,render_template
-from db import insert_activity,create_session,end_session,update_user_label,get_stats,get_sessions,get_session_logs,get_latest_session_id
+from db import insert_activity, create_session, end_session, update_user_label, get_stats, get_sessions, get_session_logs, get_latest_session_id, bulk_label_window
 
 
 
@@ -43,6 +43,20 @@ def log_activity():
     insert_activity(session_id, app_name, window_title, prediction)
 
     return jsonify({"status": "ok", "predicted_label": prediction})
+
+@app.route("/label/bulk", methods=["PATCH"])
+def bulk_label():
+    data = request.get_json()
+    session_id = data.get("session_id")
+    window_title = data.get("window_title")
+    user_label = data.get("label")
+    if not session_id or not window_title or not user_label:
+        return jsonify({"error": "session_id, window_title, label required"}), 400
+    if user_label not in {"study", "distract"}:
+        return jsonify({"error": "invalid label"}), 400
+    bulk_label_window(session_id, window_title, user_label)
+    return jsonify({"success": True}), 200
+
 
 @app.route("/label",methods=["PATCH"])
 def label():
@@ -104,9 +118,6 @@ def session_logs(session_id):
 def latest_session():
     sid = get_latest_session_id()
     return jsonify({"session_id": sid})
-
-    
-
 
 
 if __name__ == "__main__":
