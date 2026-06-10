@@ -15,26 +15,40 @@
     .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; }
     .card .label { font-size: 0.7rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
     .card .value { font-size: 1.8rem; font-weight: 500; }
-    .green { color: #7ee787; }
-    .red { color: #f85149; }
-    .yellow { color: #e3b341; }
-    .muted { color: #8b949e; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    th { text-align: left; color: #8b949e; font-weight: 400; padding: 0.5rem 0.75rem; border-bottom: 1px solid #21262d; }
-    td { padding: 0.5rem 0.75rem; border-bottom: 1px solid #161b22; color: #c9d1d9; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; }
+    .green { color: #7ee787; } .red { color: #f85149; } .yellow { color: #e3b341; } .muted { color: #8b949e; }
+    .session-info { font-size: 0.7rem; color: #484f58; margin-bottom: 1rem; }
+    .app-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; margin-bottom: 0.5rem; overflow: hidden; }
+    .app-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; cursor: pointer; user-select: none; }
+    .app-row:hover { background: #1c2128; }
+    .app-chevron { font-size: 0.6rem; color: #484f58; transition: transform 0.2s; display: inline-block; }
+    .app-chevron.open { transform: rotate(90deg); }
+    .app-name { font-size: 0.8rem; font-weight: 500; color: #e6edf3; flex: 1; }
+    .app-switch-count { font-size: 0.7rem; color: #8b949e; }
+    .window-list { border-top: 1px solid #21262d; display: none; }
+    .window-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 1rem 0.55rem 2rem; border-bottom: 1px solid #0d1117; user-select: none; }
+    .window-row:hover { background: #1c2128; }
+    .window-header { display: flex; align-items: center; gap: 0.75rem; flex: 1; cursor: pointer; min-width: 0; }
+    .window-chevron { font-size: 0.55rem; color: #484f58; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
+    .window-chevron.open { transform: rotate(90deg); }
+    .window-title { font-size: 0.75rem; color: #8b949e; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .window-switch-count { font-size: 0.7rem; color: #484f58; min-width: 28px; text-align: right; flex-shrink: 0; }
+    .timestamp-list { background: #0d1117; border-top: 1px solid #161b22; display: none; }
+    .ts-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.4rem 1rem 0.4rem 3.5rem; border-bottom: 1px solid #161b22; }
+    .ts-row:last-child { border-bottom: none; }
+    .ts-dot { width: 5px; height: 5px; border-radius: 50%; background: #30363d; flex-shrink: 0; }
+    .ts-time { font-size: 0.7rem; color: #484f58; min-width: 75px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem; }
     .badge.study { background: #1a3a2a; color: #7ee787; }
     .badge.distract { background: #3a1a1a; color: #f85149; }
+    .badge.mixed { background: #2a2510; color: #e3b341; }
     .badge.mismatch { background: #3a2a10; color: #e3b341; }
-    .title-cell { max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #8b949e; }
-    .btn-group { display: flex; gap: 0.4rem; }
-    .btn { padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-family: inherit; cursor: pointer; border: 1px solid transparent; background: transparent; }
+    .btn-group { display: flex; gap: 0.3rem; margin-left: auto; flex-shrink: 0; }
+    .btn { padding: 2px 8px; border-radius: 4px; font-size: 0.62rem; font-family: inherit; cursor: pointer; border: 1px solid transparent; background: transparent; }
     .btn-study { color: #7ee787; border-color: #1a3a2a; }
     .btn-study:hover, .btn-study.active { background: #1a3a2a; }
     .btn-distract { color: #f85149; border-color: #3a1a1a; }
     .btn-distract:hover, .btn-distract.active { background: #3a1a1a; }
-    .empty { color: #484f58; font-size: 0.8rem; padding: 1rem 0.75rem; }
-    .session-info { font-size: 0.7rem; color: #484f58; margin-bottom: 1rem; }
+    .empty { color: #484f58; font-size: 0.8rem; padding: 1rem; }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
@@ -43,76 +57,219 @@
     <a href="/dashboard" class="active">dashboard</a>
     <a href="/history">history</a>
   </nav>
-
   <h1>study_buddy / dashboard</h1>
-
   <div class="cards">
-    <div class="card"><div class="label">Total Logs</div><div class="value" id="total">—</div></div>
+    <div class="card"><div class="label">Total Logs</div><div class="value muted" id="total">—</div></div>
     <div class="card"><div class="label">Study</div><div class="value green" id="study">—</div></div>
     <div class="card"><div class="label">Distract</div><div class="value red" id="distract">—</div></div>
     <div class="card"><div class="label">Corrected</div><div class="value yellow" id="corrected">—</div></div>
     <div class="card"><div class="label">Model Mistakes</div><div class="value muted" id="mistakes">—</div></div>
   </div>
-
   <div class="session-info" id="session-info">loading latest session...</div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>#</th><th>App</th><th>Window Title</th><th>Predicted</th><th>User Label</th><th>Correct</th>
-      </tr>
-    </thead>
-    <tbody id="log-rows"></tbody>
-  </table>
+  <div id="groups-container"></div>
 
   <script>
     let currentSessionId = null;
 
-    function applyLabel(logId, label, row) {
+    function fmtTime(iso) {
+      if (!iso) return '—';
+      return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function dominantLabel(entries) {
+      const labels = entries.map(e => e.user_label || e.predicted_label);
+      const s = labels.filter(l => l === 'study').length;
+      const d = labels.filter(l => l === 'distract').length;
+      if (s > 0 && d > 0) return 'mixed';
+      return s > 0 ? 'study' : 'distract';
+    }
+
+    function groupLogs(rows) {
+      const appMap = {};
+      rows.forEach(row => {
+        if (!appMap[row.app_name]) appMap[row.app_name] = { name: row.app_name, windows: {} };
+        if (!appMap[row.app_name].windows[row.window_title]) appMap[row.app_name].windows[row.window_title] = { title: row.window_title, entries: [] };
+        appMap[row.app_name].windows[row.window_title].entries.push(row);
+      });
+      return appMap;
+    }
+
+    function saveOpenState() {
+      const open = { apps: new Set(), windows: new Set() };
+      document.querySelectorAll('.app-group').forEach(group => {
+        if (group.querySelector('.window-list').style.display === 'block')
+          open.apps.add(group.dataset.app);
+        group.querySelectorAll('.window-group').forEach(wg => {
+          if (wg.querySelector('.timestamp-list').style.display === 'block')
+            open.windows.add(group.dataset.app + '||' + wg.dataset.win);
+        });
+      });
+      return open;
+    }
+
+    function toggleApp(row) {
+      const chevron = row.querySelector('.app-chevron');
+      const list = row.nextElementSibling;
+      const open = list.style.display === 'block';
+      list.style.display = open ? 'none' : 'block';
+      chevron.classList.toggle('open', !open);
+    }
+
+    function toggleWindow(header) {
+      const winGroup = header.closest('.window-group');
+      const chevron = header.querySelector('.window-chevron');
+      const list = winGroup.querySelector('.timestamp-list');
+      const open = list.style.display === 'block';
+      list.style.display = open ? 'none' : 'block';
+      chevron.classList.toggle('open', !open);
+    }
+
+    function applyLabel(e, logId, label, tsRow) {
+      e.stopPropagation();
       fetch('/label', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: logId, label })
       }).then(r => r.json()).then(d => {
         if (d.success) {
-          const cell = row.querySelector('.user-label-cell');
-          const mismatch = label !== row.dataset.predicted;
-          cell.innerHTML = `<span class="badge ${mismatch ? 'mismatch' : label}">${label}${mismatch ? ' !' : ''}</span>`;
-          row.querySelector('.btn-study').classList.toggle('active', label === 'study');
-          row.querySelector('.btn-distract').classList.toggle('active', label === 'distract');
+          const mismatch = label !== tsRow.dataset.predicted;
+          const badge = tsRow.querySelector('.ts-badge');
+          badge.className = `badge ts-badge ${mismatch ? 'mismatch' : label}`;
+          badge.textContent = label + (mismatch ? ' !' : '');
+          tsRow.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+          tsRow.querySelector(`.btn-${label}`).classList.add('active');
         }
+      });
+    }
+
+    function bulkLabel(e, sessionId, windowTitle, label, winGroup) {
+      e.stopPropagation();
+      fetch('/label/bulk', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, window_title: windowTitle, label })
+      }).then(r => r.json()).then(d => {
+        if (d.success) {
+          // update all ts-badge and buttons inside this window group
+          winGroup.querySelectorAll('.ts-row').forEach(tsRow => {
+            const mismatch = label !== tsRow.dataset.predicted;
+            const badge = tsRow.querySelector('.ts-badge');
+            badge.className = `badge ts-badge ${mismatch ? 'mismatch' : label}`;
+            badge.textContent = label + (mismatch ? ' !' : '');
+            tsRow.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+            tsRow.querySelector(`.btn-${label}`).classList.add('active');
+          });
+          // update window row badge
+          const winBadge = winGroup.querySelector('.win-badge');
+          winBadge.className = `badge win-badge ${label}`;
+          winBadge.textContent = label;
+          // update bulk buttons active state
+          winGroup.querySelectorAll('.bulk-btn').forEach(b => b.classList.remove('active'));
+          winGroup.querySelector(`.bulk-btn-${label}`).classList.add('active');
+        }
+      });
+    }
+
+    function renderGroups(rows, openState) {
+      const container = document.getElementById('groups-container');
+      container.innerHTML = '';
+      if (!rows || rows.length === 0) {
+        container.innerHTML = '<div class="empty">no logs for this session yet</div>';
+        return;
+      }
+
+      const grouped = groupLogs(rows);
+
+      Object.values(grouped).forEach(appData => {
+        const allEntries = Object.values(appData.windows).flatMap(w => w.entries);
+        const dominant = dominantLabel(allEntries);
+        const appOpen = openState ? openState.apps.has(appData.name) : false;
+
+        const appGroup = document.createElement('div');
+        appGroup.className = 'app-group';
+        appGroup.dataset.app = appData.name;
+
+        const appRow = document.createElement('div');
+        appRow.className = 'app-row';
+        appRow.onclick = () => toggleApp(appRow);
+        appRow.innerHTML = `
+          <span class="app-chevron ${appOpen ? 'open' : ''}">▶</span>
+          <span class="app-name">${appData.name}</span>
+          <span class="app-switch-count">${allEntries.length}x</span>
+          <span class="badge ${dominant}">${dominant}</span>
+        `;
+        appGroup.appendChild(appRow);
+
+        const winList = document.createElement('div');
+        winList.className = 'window-list';
+        winList.style.display = appOpen ? 'block' : 'none';
+
+        Object.values(appData.windows).forEach(winData => {
+          const winDominant = dominantLabel(winData.entries);
+          const winKey = appData.name + '||' + winData.title;
+          const winOpen = openState ? openState.windows.has(winKey) : false;
+          const allStudy = winData.entries.every(e => (e.user_label || e.predicted_label) === 'study');
+          const allDistract = winData.entries.every(e => (e.user_label || e.predicted_label) === 'distract');
+
+          const winGroup = document.createElement('div');
+          winGroup.className = 'window-group';
+          winGroup.dataset.win = winData.title;
+
+          const winRow = document.createElement('div');
+          winRow.className = 'window-row';
+          winRow.innerHTML = `
+            <div class="window-header" onclick="toggleWindow(this)">
+              <span class="window-chevron ${winOpen ? 'open' : ''}">▶</span>
+              <span class="window-title" title="${winData.title}">${winData.title}</span>
+              <span class="window-switch-count">${winData.entries.length}x</span>
+              <span class="badge win-badge ${winDominant}">${winDominant}</span>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-study bulk-btn bulk-btn-study ${allStudy ? 'active' : ''}"
+                onclick="bulkLabel(event, ${currentSessionId}, ${JSON.stringify(winData.title)}, 'study', this.closest('.window-group'))">all study</button>
+              <button class="btn btn-distract bulk-btn bulk-btn-distract ${allDistract ? 'active' : ''}"
+                onclick="bulkLabel(event, ${currentSessionId}, ${JSON.stringify(winData.title)}, 'distract', this.closest('.window-group'))">all distract</button>
+            </div>
+          `;
+          winGroup.appendChild(winRow);
+
+          const tsList = document.createElement('div');
+          tsList.className = 'timestamp-list';
+          tsList.style.display = winOpen ? 'block' : 'none';
+
+          winData.entries.forEach(entry => {
+            const label = entry.user_label || entry.predicted_label;
+            const mismatch = entry.user_label && entry.user_label !== entry.predicted_label;
+            const tsRow = document.createElement('div');
+            tsRow.className = 'ts-row';
+            tsRow.dataset.predicted = entry.predicted_label;
+            tsRow.innerHTML = `
+              <span class="ts-dot"></span>
+              <span class="ts-time">${fmtTime(entry.timestamp)}</span>
+              <span class="badge ts-badge ${mismatch ? 'mismatch' : label}">${label}${mismatch ? ' !' : ''}</span>
+              <div class="btn-group">
+                <button class="btn btn-study ${entry.user_label === 'study' ? 'active' : ''}"
+                  onclick="applyLabel(event, ${entry.id}, 'study', this.closest('.ts-row'))">study</button>
+                <button class="btn btn-distract ${entry.user_label === 'distract' ? 'active' : ''}"
+                  onclick="applyLabel(event, ${entry.id}, 'distract', this.closest('.ts-row'))">distract</button>
+              </div>
+            `;
+            tsList.appendChild(tsRow);
+          });
+
+          winGroup.appendChild(tsList);
+          winList.appendChild(winGroup);
+        });
+
+        appGroup.appendChild(winList);
+        container.appendChild(appGroup);
       });
     }
 
     function loadSessionLogs(sid) {
       fetch(`/session/${sid}/logs`).then(r => r.json()).then(rows => {
-        const tbody = document.getElementById('log-rows');
-        tbody.innerHTML = '';
-        if (rows.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" class="empty">no logs for this session yet</td></tr>';
-          return;
-        }
-        rows.forEach(row => {
-          const mismatch = row.user_label && row.user_label !== row.predicted_label;
-          const userBadge = row.user_label
-            ? `<span class="badge ${mismatch ? 'mismatch' : row.user_label}">${row.user_label}${mismatch ? ' !' : ''}</span>`
-            : '<span style="color:#484f58">—</span>';
-          const tr = document.createElement('tr');
-          tr.dataset.predicted = row.predicted_label;
-          tr.innerHTML = `
-            <td>${row.id}</td>
-            <td>${row.app_name}</td>
-            <td class="title-cell" title="${row.window_title}">${row.window_title}</td>
-            <td><span class="badge ${row.predicted_label}">${row.predicted_label}</span></td>
-            <td class="user-label-cell">${userBadge}</td>
-            <td>
-              <div class="btn-group">
-                <button class="btn btn-study ${row.user_label === 'study' ? 'active' : ''}" onclick="applyLabel(${row.id}, 'study', this.closest('tr'))">study</button>
-                <button class="btn btn-distract ${row.user_label === 'distract' ? 'active' : ''}" onclick="applyLabel(${row.id}, 'distract', this.closest('tr'))">distract</button>
-              </div>
-            </td>`;
-          tbody.appendChild(tr);
-        });
+        const openState = saveOpenState();
+        renderGroups(rows, openState);
       });
     }
 
@@ -136,10 +293,7 @@
         currentSessionId = d.session_id;
         document.getElementById('session-info').textContent = `showing session #${currentSessionId}`;
         loadSessionLogs(currentSessionId);
-        setInterval(() => {
-          loadStats();
-          loadSessionLogs(currentSessionId);
-        }, 5000);
+        setInterval(() => { loadStats(); loadSessionLogs(currentSessionId); }, 5000);
       });
     }
 
