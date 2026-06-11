@@ -58,6 +58,8 @@
     <a href="/history">history</a>
   </nav>
   <h1>study_buddy / dashboard</h1>
+  <button id="retrain-btn" class="btn btn-study" style="margin-bottom:1.5rem; padding: 4px 14px; font-size:0.75rem;" onclick="retrain()">retrain model</button>
+  <span id="retrain-status" style="font-size:0.7rem; color:#484f58; margin-left:0.75rem;"></span>
   <div class="cards">
     <div class="card"><div class="label">Total Logs</div><div class="value muted" id="total">—</div></div>
     <div class="card"><div class="label">Study</div><div class="value green" id="study">—</div></div>
@@ -328,6 +330,22 @@
         setInterval(() => { loadStats(); loadSessionLogs(currentSessionId); }, 5000);
       });
     }
+    function retrain() {
+      const btn = document.getElementById('retrain-btn');
+      const status = document.getElementById('retrain-status');
+      btn.disabled = true;
+      status.textContent = 'retraining...';
+      fetch('/retrain', { method: 'POST' })
+      .then(r => r.json())
+      .then(d => {
+      status.textContent = `done — ${d.user_labels_used} user labels used`;
+      btn.disabled = false;
+      })
+      .catch(() => {
+      status.textContent = 'failed';
+      btn.disabled = false;
+    });
+}
 
     init();
   </script>

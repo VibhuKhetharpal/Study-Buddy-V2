@@ -32,28 +32,30 @@ def retrain(data_path):
     sys.path.append(os.path.join(BASE_DIR, '..', 'backend'))
     from db import get_labelled_data
 
-    # load seed data
     df_seed = pd.read_csv(data_path)
-    
-    # load user corrections from DB
+
     user_data = get_labelled_data()
-    df_user = pd.DataFrame(user_data)
+    df_user = pd.DataFrame(user_data) if user_data else pd.DataFrame(columns=['text', 'label'])
 
-    # combine
+    # deduplicate user labels — keep last correction per unique window
+    if not df_user.empty:
+        df_user = df_user.drop_duplicates(subset=['text'], keep='last')
+
+    # user labels override seed data for same text
+    df_seed = df_seed[~df_seed['text'].isin(df_user['text'])]
+
     df = pd.concat([df_seed, df_user], ignore_index=True)
-
     X = df['text']
     Y = df['label']
 
     vectorizer = TfidfVectorizer()
     matrix = vectorizer.fit_transform(X)
-    model = LogisticRegression()
+    model = LogisticRegression(max_iter=1000)
     model.fit(matrix, Y)
 
     joblib.dump(model, MODEL_PATH)
     joblib.dump(vectorizer, VECTORIZER_PATH)
-    
-    return len(df_user)  # how many user labels were used
+    return len(df_user)
 
 if __name__ == "__main__":
     data_path=os.path.join(BASE_DIR,"..","data","seed_data.csv")
