@@ -1,0 +1,12 @@
+flask
+requests
+pandas
+scikit-learn
+joblib
+numpy
+sentence-transformers
+
+# windows only
+pywin32
+psutil
+win10toast

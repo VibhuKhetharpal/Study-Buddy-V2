@@ -1,68 +1,69 @@
-import pandas as pd 
-from sklearn.feature_extraction.text import TfidfVectorizer
+import pandas as pd
+from sentence_transformers import SentenceTransformer
 from sklearn.linear_model import LogisticRegression
 import joblib
+import numpy as np
 import os
 
-BASE_DIR=os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH=os.path.join(BASE_DIR,"model.pkl")
-VECTORIZER_PATH=os.path.join(BASE_DIR,"vectorizer.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
+EMBEDDINGS_PATH = os.path.join(BASE_DIR, "train_embeddings.npy")
+LABELS_PATH = os.path.join(BASE_DIR, "train_labels.npy")
+
+# loaded once so predict() doesn't reload it on every call
+EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+
 
 def train(data_path):
-    df=pd.read_csv(data_path)
-    X=df['text']
-    Y=df['label']
-    tfidf_Vectorizer=TfidfVectorizer()#initialise
-    tfidf_matrix=tfidf_Vectorizer.fit_transform(X)#Converted Text to Numbers
+    df = pd.read_csv(data_path)
+    X = df['text'].tolist()
+    Y = df['label'].tolist()
 
-    model=LogisticRegression()
-    model.fit(tfidf_matrix,Y)#train on label
+    embeddings = EMBED_MODEL.encode(X, show_progress_bar=True)
 
-    joblib.dump(model,MODEL_PATH)
-    joblib.dump(tfidf_Vectorizer,VECTORIZER_PATH)
+    model = LogisticRegression(max_iter=1000)
+    model.fit(embeddings, Y)
 
-def predict(X):
-    tfidf_vectorizer=joblib.load(VECTORIZER_PATH)
-    model=joblib.load(MODEL_PATH)
-    tfidf_matrix=tfidf_vectorizer.transform([X])
-    return model.predict(tfidf_matrix)[0]
+    joblib.dump(model, MODEL_PATH)
+    np.save(EMBEDDINGS_PATH, embeddings)
+    np.save(LABELS_PATH, np.array(Y))
+
+
+def predict(text):
+    model = joblib.load(MODEL_PATH)
+    embedding = EMBED_MODEL.encode([text])
+    return model.predict(embedding)[0]
+
 
 def retrain(data_path):
     import sys
     sys.path.append(os.path.join(BASE_DIR, '..', 'backend'))
     from db import get_labelled_data
 
-    df_seed = pd.read_csv(data_path)
+    seed_embeddings = np.load(EMBEDDINGS_PATH)
+    seed_labels = np.load(LABELS_PATH)
 
     user_data = get_labelled_data()
-    df_user = pd.DataFrame(user_data) if user_data else pd.DataFrame(columns=['text', 'label'])
+    if user_data:
+        df_user = pd.DataFrame(user_data).drop_duplicates(subset=['text'], keep='last')
+        user_texts = df_user['text'].tolist()
+        user_labels = df_user['label'].tolist()
 
-    # deduplicate user labels — keep last correction per unique window
-    if not df_user.empty:
-        df_user = df_user.drop_duplicates(subset=['text'], keep='last')
+        user_embeddings = EMBED_MODEL.encode(user_texts, show_progress_bar=False)
+        all_embeddings = np.vstack([seed_embeddings, user_embeddings])
+        all_labels = np.concatenate([seed_labels, np.array(user_labels)])
+    else:
+        all_embeddings = seed_embeddings
+        all_labels = seed_labels
 
-    # user labels override seed data for same text
-    df_seed = df_seed[~df_seed['text'].isin(df_user['text'])]
-
-    df = pd.concat([df_seed, df_user], ignore_index=True)
-    X = df['text']
-    Y = df['label']
-
-    vectorizer = TfidfVectorizer()
-    matrix = vectorizer.fit_transform(X)
     model = LogisticRegression(max_iter=1000)
-    model.fit(matrix, Y)
-
+    model.fit(all_embeddings, all_labels)
     joblib.dump(model, MODEL_PATH)
-    joblib.dump(vectorizer, VECTORIZER_PATH)
-    return len(df_user)
+
+    return len(user_data) if user_data else 0
+
 
 if __name__ == "__main__":
-    data_path=os.path.join(BASE_DIR,"..","data","seed_data.csv")
+    data_path = os.path.join(BASE_DIR, "..", "data", "seed_data.csv")
     train(data_path)
-    print("Model Trained and saved")
-
-
-
-
-    
+    print("Model trained and saved")
