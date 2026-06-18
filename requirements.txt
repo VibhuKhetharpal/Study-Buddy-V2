@@ -5,6 +5,7 @@ scikit-learn
 joblib
 numpy
 sentence-transformers
+python-dotenv
 
 # windows only
 pywin32

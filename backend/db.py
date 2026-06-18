@@ -202,4 +202,11 @@ def bulk_label_window(session_id, window_title, user_label):
     conn.close()
 
 
-
+def get_session_window_titles(session_id):
+    conn = get_connection()
+    rows = conn.execute(
+        "SELECT app_name, window_title FROM activity_logs WHERE session_id=? ORDER BY id ASC",
+        (session_id,)
+    ).fetchall()
+    conn.close()
+    return [{"app_name": r[0], "window_title": r[1]} for r in rows]

@@ -1,11 +1,13 @@
 import sys
 import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
 from classifier import predict,retrain
 from flask import Flask, request, jsonify,render_template
 from db import insert_activity, create_session, end_session, update_user_label, get_stats, get_sessions, get_session_logs, get_latest_session_id, bulk_label_window
 
-
+load_dotenv()
 
 app = Flask(__name__)
 @app.route("/start", methods=["POST"])
@@ -118,6 +120,28 @@ def session_logs(session_id):
 def latest_session():
     sid = get_latest_session_id()
     return jsonify({"session_id": sid})
+
+genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+
+@app.route("/summary/<int:session_id>", methods=["GET"])
+def session_summary(session_id):
+    from db import get_session_window_titles
+    logs = get_session_window_titles(session_id)
+    if not logs:
+        return jsonify({"error": "no logs found for session"}), 404
+
+    titles = [f"{l['app_name']} - {l['window_title']}" for l in logs]
+    combined = "\n".join(titles)
+
+    model = genai.GenerativeModel("gemini-2.5-flash")
+    prompt = f"""You are analyzing a study session. Here are the window titles logged during the session:
+
+{combined}
+
+Give a short 3-4 sentence natural language summary of how the session went. Cover: what the person was working on, roughly how focused they were, and any notable distractions. Be direct, not motivational."""
+
+    response = model.generate_content(prompt)
+    return jsonify({"summary": response.text})
 
 
 if __name__ == "__main__":
