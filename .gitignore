@@ -7,3 +7,4 @@ database.db
 backend/database.db
 ml/model.pkl
 ml/vectorizer.pkl
+backend/database.db
