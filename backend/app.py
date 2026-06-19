@@ -21,7 +21,8 @@ def start_session():
         "session_id": session_id
     })
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', 'seed_data.csv')
+SEED_FILENAME = os.environ.get("SEED_FILENAME", "seed_data.csv")
+DATA_PATH = os.path.join(os.path.dirname(__file__), '..', 'data', SEED_FILENAME)
 
 @app.route('/retrain', methods=['POST'])
 def retrain_model():

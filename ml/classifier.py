@@ -6,9 +6,10 @@ import numpy as np
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "model.pkl")
-EMBEDDINGS_PATH = os.path.join(BASE_DIR, "train_embeddings.npy")
-LABELS_PATH = os.path.join(BASE_DIR, "train_labels.npy")
+MODEL_DIR = os.path.join(BASE_DIR, os.environ.get("MODEL_SUBDIR", ""))
+MODEL_PATH = os.path.join(MODEL_DIR, "model.pkl")
+EMBEDDINGS_PATH = os.path.join(MODEL_DIR, "train_embeddings.npy")
+LABELS_PATH = os.path.join(MODEL_DIR, "train_labels.npy")
 
 # loaded once so predict() doesn't reload it on every call
 EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
