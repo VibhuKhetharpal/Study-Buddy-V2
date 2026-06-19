@@ -1,6 +1,7 @@
 import sys
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS
 import google.generativeai as genai
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'ml'))
 from classifier import predict,retrain
@@ -10,6 +11,7 @@ from db import insert_activity, create_session, end_session, update_user_label, 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 @app.route("/start", methods=["POST"])
 def start_session():
 
