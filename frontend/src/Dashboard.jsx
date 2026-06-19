@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import Heatbar from "./components/Heatbar.jsx";
 import LogTree from "./components/LogTree.jsx";
+import ActionButton from "./components/ActionButton.jsx";
 import { getStats, getLatestSession, getSessionLogs, getSummary, retrainModel } from "./api.js";
-import { buildHeatbar } from "./utils.js";
+import { buildHeatbar, fmtTime } from "./utils.js";
 
 function StatCard({ label, value, color }) {
   return (
@@ -81,42 +82,20 @@ export default function Dashboard() {
             session timeline
           </div>
           <Heatbar slices={heatSlices} />
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.3rem", fontSize: "0.65rem", color: "#484f58" }}>
+            <span>{fmtTime(rows[0]?.timestamp)}</span>
+            <span>{fmtTime(rows[rows.length - 1]?.timestamp)}</span>
+          </div>
         </div>
       )}
 
       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1.5rem" }}>
-        <button
-          onClick={handleRetrain}
-          disabled={retraining}
-          style={{
-            padding: "4px 14px",
-            fontSize: "0.75rem",
-            borderRadius: 4,
-            fontFamily: "inherit",
-            cursor: "pointer",
-            color: "#7ee787",
-            border: "1px solid #1a3a2a",
-            background: "transparent",
-          }}
-        >
+        <ActionButton onClick={handleRetrain} disabled={retraining} color="green">
           retrain model
-        </button>
-        <button
-          onClick={handleSummary}
-          disabled={!sessionId || summaryLoading}
-          style={{
-            padding: "4px 14px",
-            fontSize: "0.75rem",
-            borderRadius: 4,
-            fontFamily: "inherit",
-            cursor: "pointer",
-            color: "#e3b341",
-            border: "1px solid #3a2a10",
-            background: "transparent",
-          }}
-        >
+        </ActionButton>
+        <ActionButton onClick={handleSummary} disabled={!sessionId || summaryLoading} color="yellow">
           {summaryLoading ? "summarizing..." : "summarize session"}
-        </button>
+        </ActionButton>
         <span style={{ fontSize: "0.7rem", color: "#484f58" }}>{retrainMsg}</span>
       </div>
 
@@ -153,4 +132,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

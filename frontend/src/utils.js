@@ -26,9 +26,19 @@ export function groupLogs(rows) {
   }));
 }
 
+// backend stores timestamps as naive UTC ISO strings (no "Z" suffix), so
+// the JS Date constructor treats them as local time by mistake. appending
+// "Z" tells it explicitly "this is UTC", which then converts correctly
+// to the browser's local timezone when displayed.
+function parseUTC(iso) {
+  if (!iso) return null;
+  return new Date(iso.endsWith("Z") ? iso : iso + "Z");
+}
+
 export function fmtTime(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleTimeString([], {
+  const d = parseUTC(iso);
+  if (!d) return "—";
+  return d.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
@@ -36,8 +46,9 @@ export function fmtTime(iso) {
 }
 
 export function fmtDateTime(iso) {
-  if (!iso) return "—";
-  return new Date(iso).toLocaleString();
+  const d = parseUTC(iso);
+  if (!d) return "—";
+  return d.toLocaleString();
 }
 
 export function duration(start, end) {
@@ -53,15 +64,15 @@ export function duration(start, end) {
 export function buildHeatbar(rows, slices = 30) {
   if (!rows || rows.length === 0) return [];
   const sorted = [...rows].sort(
-    (a, b) => new Date(a.timestamp) - new Date(b.timestamp)
+    (a, b) => parseUTC(a.timestamp) - parseUTC(b.timestamp)
   );
-  const start = new Date(sorted[0].timestamp).getTime();
-  const end = new Date(sorted[sorted.length - 1].timestamp).getTime();
+  const start = parseUTC(sorted[0].timestamp).getTime();
+  const end = parseUTC(sorted[sorted.length - 1].timestamp).getTime();
   const span = Math.max(end - start, 1);
 
   const buckets = Array.from({ length: slices }, () => []);
   sorted.forEach((row) => {
-    const t = new Date(row.timestamp).getTime();
+    const t = parseUTC(row.timestamp).getTime();
     const idx = Math.min(
       slices - 1,
       Math.floor(((t - start) / span) * slices)
@@ -73,4 +84,3 @@ export function buildHeatbar(rows, slices = 30) {
     entries.length === 0 ? "empty" : dominantLabel(entries)
   );
 }
-

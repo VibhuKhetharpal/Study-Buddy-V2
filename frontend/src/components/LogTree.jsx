@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Badge from "./Badge.jsx";
 import LabelButtons from "./LabelButtons.jsx";
+import ActionButton from "./ActionButton.jsx";
 import { groupLogs, dominantLabel, fmtTime } from "../utils.js";
 import { setLabel, setBulkLabel } from "../api.js";
 
@@ -63,25 +64,13 @@ function WindowRow({ sessionId, winData, onChanged }) {
           </span>
           <Badge label={dominant} />
         </div>
-        <div style={{ display: "flex", gap: "0.3rem" }}>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              allLabel("study");
-            }}
-            style={btnStyle("#7ee787", "#1a3a2a")}
-          >
+        <div style={{ display: "flex", gap: "0.4rem" }}>
+          <ActionButton onClick={() => allLabel("study")} color="green" small>
             all study
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              allLabel("distract");
-            }}
-            style={btnStyle("#f85149", "#3a1a1a")}
-          >
+          </ActionButton>
+          <ActionButton onClick={() => allLabel("distract")} color="red" small>
             all distract
-          </button>
+          </ActionButton>
         </div>
       </div>
 
@@ -117,19 +106,6 @@ function WindowRow({ sessionId, winData, onChanged }) {
       )}
     </div>
   );
-}
-
-function btnStyle(color, border) {
-  return {
-    padding: "2px 8px",
-    borderRadius: 4,
-    fontSize: "0.62rem",
-    fontFamily: "inherit",
-    cursor: "pointer",
-    border: `1px solid ${border}`,
-    background: "transparent",
-    color,
-  };
 }
 
 function AppGroup({ sessionId, appData, onChanged }) {
@@ -187,4 +163,3 @@ export default function LogTree({ sessionId, rows, onChanged }) {
     </div>
   );
 }
-
