@@ -7,6 +7,8 @@ numpy
 sentence-transformers
 python-dotenv
 google-generativeai
+flask-cors
+gunicorn
 
 # windows only
 #pywin32
