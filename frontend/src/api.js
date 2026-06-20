@@ -1,4 +1,4 @@
-const BASE = "http://127.0.0.1:5000";
+const BASE = "https://vibhukp-studybuddy.hf.space";
 
 export async function getStats() {
   const r = await fetch(`${BASE}/stats`);
