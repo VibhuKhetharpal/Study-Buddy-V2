@@ -1,124 +1,901 @@
 text,label
-code.exe Visual Studio Code - app.py,study
-code.exe Visual Studio Code - classifier.py,study
-code.exe Visual Studio Code - db.py,study
-code.exe Visual Studio Code - main.cpp,study
-code.exe Visual Studio Code - script.js,study
-code.exe Visual Studio Code - index.html,study
-code.exe Visual Studio Code - styles.css,study
-code.exe Visual Studio Code - README.md,study
-code.exe Visual Studio Code - requirements.txt,study
-code.exe Visual Studio Code - server.py,study
+Google Chrome Khan Academy - Kubernetes Basics,study
+chrome.exe Coursera - Flask Routing,study
+Safari Facebook - story time video,distract
+chrome.exe Python Documentation - SQL Joins,study
+Safari Hotstar - explore feed,distract
+Google Chrome YouTube - CSS Flexbox Grid lecture,study
+Google Docs - Research Paper Draft,study
+Google Chrome Twitter - shorts compilation,distract
+chrome.exe BuzzFeed - cooking mukbang,distract
+Safari HackerRank - CSS Flexbox Grid,study
+PyCharm - App.css,study
+firefox.exe Facebook - minecraft speedrun,distract
+firefox.exe Pinterest - football highlights,distract
+Safari GeeksforGeeks - Recursion Explained,study
+Safari 9GAG - anime fight scenes,distract
+Google Chrome HackerRank - Kubernetes Basics,study
+Google Chrome Coursera - Gradient Descent,study
+chrome.exe Python Documentation - Memory Management,study
+Google Chrome GitHub - Operating Systems Deadlock,study
+Firefox Facebook - travel vlog,distract
+chrome.exe LeetCode - Database Normalization,study
+firefox.exe ESPN - meme dump,distract
+chrome.exe Pinterest - meme dump,distract
+Firefox Pinterest - celebrity gossip news,distract
+Google Chrome Python Documentation - REST API Design,study
+chrome.exe Crunchyroll - makeup tutorial,distract
+chrome.exe Tumblr - behind the scenes,distract
+firefox.exe BuzzFeed - for you page,distract
+Safari YouTube - reaction video,distract
+Google Chrome HackerRank - Transformer Architecture,study
+firefox.exe Twitter - celebrity drama,distract
+firefox.exe MyAnimeList - satisfying compilation,distract
+chrome.exe GitHub - Computer Networks OSI Model,study
+Visual Studio Code - webpack.config.js,study
+Firefox Reddit - r/mildlyinteresting,distract
+Safari ESPN - valorant highlights,distract
+firefox.exe 9GAG - conspiracy theory video,distract
+Google Chrome HackerRank - Binary Search Trees,study
+Safari Instagram - year in review compilation,distract
+Google Chrome Pinterest - cooking mukbang,distract
+Safari Prime Video - extreme sports clip,distract
+Safari Twitter - fan theories,distract
+chrome.exe MyAnimeList - workout motivation clip,distract
+Google Chrome YouTube - Docker Containers Tutorial lecture,study
+Google Chrome Reddit - r/nextfuckinglevel,distract
+Safari Google Scholar - System Design Load Balancing,study
+Safari W3Schools - Data Structures Heap,study
+Safari LeetCode - Reverse Linked List,study
+Google Chrome 9GAG - makeup tutorial,distract
+Sublime Text - database.py,study
+Firefox Instagram - blooper reel,distract
+PyCharm - main.cpp,study
+Safari GitHub - REST API Design,study
+Safari Python Documentation - Microservices Architecture,study
+Google Chrome Google Scholar - Big O Notation,study
+chrome.exe Hotstar - minecraft speedrun,distract
+powershell.exe - git log --oneline,study
+chrome.exe Netflix - for you page,distract
+vim.exe - preprocess.py,study
+Firefox ESPN - live concert clip,distract
+chrome.exe Khan Academy - Operating Systems Deadlock,study
+Google Chrome Python Documentation - Microservices Architecture,study
+Safari Wikipedia - Binary Search Trees,study
+Google Chrome ESPN - unboxing haul,distract
+Google Chrome Stack Overflow - CSS Flexbox Grid,study
+chrome.exe Google Scholar - Two Sum,study
+firefox.exe Tumblr - prank compilation,distract
+chrome.exe ArXiv - Compiler Design,study
+chrome.exe Google Scholar - Microservices Architecture,study
+Safari Python Documentation - Hash Tables,study
+Safari freeCodeCamp - Data Structures Heap,study
+Safari MyAnimeList - dance trend,distract
+Google Chrome Python Documentation - Recursion Explained,study
+Safari GeeksforGeeks - Operating Systems Deadlock,study
+Firefox Netflix - fashion haul try on,distract
+Google Chrome freeCodeCamp - Big O Notation,study
+Safari Facebook - prank compilation,distract
+firefox.exe Netflix - wedding video viral,distract
+Google Chrome Google Scholar - Docker Containers Tutorial,study
+Safari Khan Academy - Operating System Scheduling,study
+Google Chrome Coursera - REST API Design,study
+firefox.exe YouTube - talk show clip,distract
+Google Chrome ESPN - cooking mukbang,distract
+Google Chrome Hotstar - gameplay walkthrough,distract
+chrome.exe Google Scholar - Reverse Linked List,study
+Terminal - pip install -r requirements.txt,study
+Google Chrome Crunchyroll - tv show recap,distract
+Google Chrome Prime Video - movie review spoilers,distract
+Google Chrome YouTube - Git Rebase vs Merge lecture,study
+Sublime Text - binary_search.cpp,study
+Google Chrome Twitch - conspiracy theory video,distract
+Google Chrome W3Schools - Reverse Linked List,study
+Safari Google Scholar - Memory Management,study
+Google Chrome Google Scholar - Data Structures Heap,study
+Google Chrome TikTok - satisfying compilation,distract
+Google Chrome freeCodeCamp - Transformer Architecture,study
+chrome.exe Crunchyroll - explore feed,distract
+Google Chrome GitHub - System Design Load Balancing,study
+Google Chrome Prime Video - stand up comedy clip,distract
+chrome.exe Imgur - football highlights,distract
+Google Chrome Facebook - extreme sports clip,distract
+Safari YouTube - Hash Tables lecture,study
+chrome.exe freeCodeCamp - React Hooks useEffect,study
+PyCharm - api_client.ts,study
+Vim - main.jsx,study
+firefox.exe Netflix - extreme sports clip,distract
+chrome.exe Prime Video - fan theories,distract
+chrome.exe Python Documentation - Big O Notation,study
+firefox.exe Instagram - minecraft speedrun,distract
+Safari Hotstar - true crime documentary clip,distract
+Safari 9GAG - pet videos compilation,distract
+chrome.exe Stack Overflow - Data Structures Heap,study
+firefox.exe Facebook - travel vlog,distract
+Google Chrome Netflix - makeup tutorial,distract
+PyCharm - webpack.config.js,study
+chrome.exe Hotstar - podcast clip funny,distract
+Google Chrome Wikipedia - Microservices Architecture,study
+Safari W3Schools - Operating System Scheduling,study
+chrome.exe Pinterest - satisfying compilation,distract
+Google Chrome Khan Academy - Machine Learning Overfitting,study
+Firefox BuzzFeed - podcast clip funny,distract
+Google Chrome TikTok - talk show clip,distract
+chrome.exe GitHub - Flask Routing,study
+Code.exe - vite.config.js,study
+Google Chrome GitHub - Compiler Design,study
+chrome.exe freeCodeCamp - Compiler Design,study
+Safari Tumblr - viral moment,distract
+Google Chrome GeeksforGeeks - System Design Load Balancing,study
+firefox.exe Tumblr - extreme sports clip,distract
+PyCharm - script.js,study
+chrome.exe MDN Web Docs - Recursion Explained,study
+Google Chrome W3Schools - Database Indexing,study
+Google Chrome Python Documentation - SQL Joins,study
+chrome.exe Twitter - for you page,distract
+Firefox Tumblr - live concert clip,distract
+chrome.exe Google Scholar - Transformer Architecture,study
+Google Chrome Prime Video - talk show clip,distract
+idea64.exe - requirements.txt,study
+firefox.exe MyAnimeList - workout motivation clip,distract
+Firefox Facebook - viral moment,distract
+Safari Google Scholar - Database Indexing,study
+Safari Twitter - true crime documentary clip,distract
+firefox.exe Instagram - prank compilation,distract
+Google Chrome MDN Web Docs - Neural Networks Basics,study
+Firefox Crunchyroll - unboxing haul,distract
+firefox.exe ESPN - valorant highlights,distract
+Google Chrome BuzzFeed - gaming montage,distract
+Safari YouTube - Flask Routing lecture,study
+firefox.exe YouTube - celebrity drama,distract
+chrome.exe Coursera - Graph Traversal BFS DFS,study
+firefox.exe ESPN - year in review compilation,distract
+Google Chrome Wikipedia - Kubernetes Basics,study
+Safari YouTube - Compiler Design lecture,study
+Firefox Crunchyroll - story time video,distract
+firefox.exe Twitter - conspiracy theory video,distract
+Xcode.exe - index.html,study
+firefox.exe Twitch - satisfying compilation,distract
+Google Chrome BuzzFeed - viral moment,distract
+Safari HackerRank - TCP vs UDP,study
+Safari Stack Overflow - Transformer Architecture,study
+Safari HackerRank - Git Rebase vs Merge,study
+sublime_text.exe - train_model.py,study
+Safari Coursera - Database Normalization,study
+Firefox BuzzFeed - ASMR video,distract
+vim.exe - models.py,study
+Google Chrome Imgur - explore feed,distract
+Firefox ESPN - fan theories,distract
+Xcode.exe - binary_search.cpp,study
+Notion.exe - Project Roadmap,study
+Google Chrome Prime Video - extreme sports clip,distract
+Safari Stack Overflow - Data Structures Heap,study
+Safari TikTok - behind the scenes,distract
+chrome.exe Pinterest - conspiracy theory video,distract
+firefox.exe Crunchyroll - fan theories,distract
+chrome.exe Prime Video - gaming montage,distract
+chrome.exe MyAnimeList - music video,distract
+firefox.exe Crunchyroll - shorts compilation,distract
+Safari Google Scholar - CSS Flexbox Grid,study
+chrome.exe GitHub - Hash Tables,study
+Google Chrome YouTube - unboxing haul,distract
+chrome.exe HackerRank - Compiler Design,study
+chrome.exe Instagram - dance trend,distract
+Google Chrome Instagram - conspiracy theory video,distract
+Google Chrome Coursera - TCP vs UDP,study
+firefox.exe MyAnimeList - conspiracy theory video,distract
+Google Chrome Crunchyroll - minecraft speedrun,distract
+Firefox 9GAG - funny fails compilation,distract
+Google Chrome Wikipedia - Database Indexing,study
+chrome.exe BuzzFeed - ASMR video,distract
+Google Chrome Imgur - vlog daily routine,distract
+firefox.exe Twitch - celebrity gossip news,distract
+Safari Netflix - trending now,distract
+Safari Coursera - Transformer Architecture,study
+chrome.exe HackerRank - Docker Containers Tutorial,study
+Safari Coursera - Operating Systems Deadlock,study
+chrome.exe MDN Web Docs - Gradient Descent,study
+chrome.exe Wikipedia - TCP vs UDP,study
+chrome.exe Twitch - live stream chatting,distract
+firefox.exe Imgur - conspiracy theory video,distract
+Google Chrome Netflix - blooper reel,distract
+chrome.exe MDN Web Docs - React Hooks useEffect,study
+Google Chrome YouTube - Machine Learning Overfitting lecture,study
+chrome.exe Twitter - true crime documentary clip,distract
+chrome.exe Imgur - movie trailer reaction,distract
+Google Chrome Google Scholar - Machine Learning Overfitting,study
+firefox.exe Imgur - video game review,distract
+chrome.exe Netflix - video game review,distract
+chrome.exe LeetCode - Linear Algebra Matrices,study
+Safari Google Scholar - TCP vs UDP,study
+Firefox Prime Video - travel vlog,distract
+Google Chrome GitHub - Operating System Scheduling,study
+Google Chrome 9GAG - behind the scenes,distract
+chrome.exe Crunchyroll - satisfying compilation,distract
+sublime_text.exe - db.py,study
+Firefox 9GAG - meme dump,distract
+PyCharm - styles.css,study
+chrome.exe Netflix - gaming montage,distract
+firefox.exe Instagram - live stream chatting,distract
+chrome.exe Crunchyroll - podcast clip funny,distract
+chrome.exe Stack Overflow - CSS Flexbox Grid,study
+Safari Twitch - trending now,distract
+chrome.exe W3Schools - Compiler Design,study
+Google Chrome 9GAG - podcast clip funny,distract
+firefox.exe MyAnimeList - movie trailer reaction,distract
+Google Chrome TikTok - video game review,distract
+chrome.exe Stack Overflow - SQL Joins,study
+Safari freeCodeCamp - Binary Search Trees,study
+chrome.exe Python Documentation - Dynamic Programming,study
+chrome.exe MDN Web Docs - Operating Systems Deadlock,study
+firefox.exe Netflix - fan theories,distract
+Safari Khan Academy - React Hooks useEffect,study
+chrome.exe ArXiv - Memory Management,study
+Safari Instagram - conspiracy theory video,distract
+firefox.exe MyAnimeList - video game review,distract
+Google Chrome HackerRank - Dynamic Programming,study
+Safari BuzzFeed - unboxing haul,distract
+Google Chrome Khan Academy - Two Sum,study
+Safari Khan Academy - SQL Joins,study
+chrome.exe W3Schools - Flask Routing,study
+Safari ArXiv - Big O Notation,study
+chrome.exe Coursera - SQL Joins,study
+Google Chrome TikTok - rant video,distract
+firefox.exe Hotstar - fashion haul try on,distract
+Safari Twitter - wedding video viral,distract
+Safari Python Documentation - REST API Design,study
+Firefox ESPN - rant video,distract
+sublime_text.exe - App.jsx,study
+chrome.exe 9GAG - minecraft speedrun,distract
+Vim - main.cpp,study
+Safari MDN Web Docs - Computer Networks OSI Model,study
+Google Chrome GitHub - SQL Joins,study
+chrome.exe BuzzFeed - minecraft speedrun,distract
+Safari Wikipedia - Neural Networks Basics,study
+Google Chrome W3Schools - React Hooks useEffect,study
+chrome.exe Hotstar - behind the scenes,distract
+chrome.exe Pinterest - live stream chatting,distract
+firefox.exe 9GAG - funny fails compilation,distract
+Safari GitHub - Database Indexing,study
+Safari Prime Video - podcast clip funny,distract
+Firefox Netflix - story time video,distract
+Google Chrome Hotstar - extreme sports clip,distract
+Safari Coursera - Binary Search Trees,study
+PyCharm - Dockerfile,study
+Google Chrome Netflix - viral moment,distract
+chrome.exe LeetCode - CSS Flexbox Grid,study
+vim.exe - router.go,study
+Safari freeCodeCamp - Hash Tables,study
+chrome.exe Tumblr - valorant highlights,distract
+Google Chrome Google Scholar - Neural Networks Basics,study
+Safari Prime Video - challenge video,distract
+idea64.exe - classifier.py,study
+Safari Khan Academy - Git Rebase vs Merge,study
+chrome.exe Crunchyroll - fashion haul try on,distract
+Safari Prime Video - movie trailer reaction,distract
+firefox.exe YouTube - anime fight scenes,distract
+chrome.exe HackerRank - Data Structures Heap,study
+Firefox Tumblr - rant video,distract
+Google Chrome Imgur - live stream chatting,distract
+firefox.exe 9GAG - minecraft speedrun,distract
+Safari Python Documentation - CSS Flexbox Grid,study
+Safari Twitch - pet videos compilation,distract
+Xcode - main.py,study
+Google Chrome Imgur - blooper reel,distract
+Safari Khan Academy - Operating Systems Deadlock,study
+chrome.exe Python Documentation - CSS Flexbox Grid,study
+Safari TikTok - fashion haul try on,distract
+firefox.exe Reddit - r/facepalm,distract
+Google Chrome BuzzFeed - rant video,distract
+chrome.exe Coursera - Operating Systems Deadlock,study
+chrome.exe Twitter - season finale reaction,distract
+Safari Crunchyroll - season finale reaction,distract
+chrome.exe HackerRank - Kubernetes Basics,study
+Firefox 9GAG - rant video,distract
+Safari HackerRank - Graph Traversal BFS DFS,study
+chrome.exe GitHub - REST API Design,study
+IntelliJ IDEA - models.py,study
+Firefox Facebook - live stream chatting,distract
+Google Chrome Reddit - r/AnimalsBeingDerps,distract
+IntelliJ IDEA - vite.config.js,study
+firefox.exe Twitch - dance trend,distract
+firefox.exe Crunchyroll - celebrity interview,distract
+chrome.exe Crunchyroll - live stream chatting,distract
+Google Chrome Pinterest - behind the scenes,distract
+Firefox TikTok - funny fails compilation,distract
+Google Chrome ESPN - pet videos compilation,distract
+Safari Pinterest - podcast clip funny,distract
+chrome.exe Khan Academy - Machine Learning Overfitting,study
+Safari Khan Academy - Hash Tables,study
+Google Chrome GitHub - Data Structures Heap,study
+Firefox Crunchyroll - extreme sports clip,distract
+chrome.exe Twitter - wedding video viral,distract
+Google Chrome Crunchyroll - cricket highlights,distract
+Firefox Twitch - cooking mukbang,distract
+Google Chrome MyAnimeList - fan theories,distract
+chrome.exe TikTok - pet videos compilation,distract
+Safari LeetCode - JavaScript Closures,study
+chrome.exe MyAnimeList - conspiracy theory video,distract
+chrome.exe MDN Web Docs - Transformer Architecture,study
+Google Chrome ESPN - podcast clip funny,distract
+Safari GitHub - Linear Algebra Matrices,study
+Safari Imgur - blooper reel,distract
+chrome.exe TikTok - podcast clip funny,distract
+Safari Wikipedia - REST API Design,study
+Safari Instagram - blooper reel,distract
+firefox.exe Hotstar - music video,distract
+chrome.exe Twitter - celebrity drama,distract
+Safari Pinterest - for you page,distract
+Google Chrome MyAnimeList - movie review spoilers,distract
+IntelliJ IDEA - main.jsx,study
+firefox.exe BuzzFeed - season finale reaction,distract
+Safari Facebook - season finale reaction,distract
+Firefox Twitch - celebrity gossip news,distract
+Sublime Text - config.yaml,study
+Spotify.exe - Top Hits 2026,distract
+chrome.exe ArXiv - Computer Networks OSI Model,study
+Google Chrome ArXiv - System Design Load Balancing,study
+Google Chrome Stack Overflow - Compiler Design,study
+chrome.exe Khan Academy - Database Indexing,study
+Google Chrome Tumblr - cooking mukbang,distract
+Google Chrome ArXiv - Operating Systems Deadlock,study
+chrome.exe freeCodeCamp - Operating Systems Deadlock,study
+Firefox BuzzFeed - behind the scenes,distract
+Google Chrome Hotstar - viral moment,distract
+chrome.exe ArXiv - TCP vs UDP,study
+Safari LeetCode - CSS Flexbox Grid,study
+Safari W3Schools - Probability Distributions,study
+Safari Khan Academy - REST API Design,study
+Safari Python Documentation - Computer Networks OSI Model,study
+firefox.exe Instagram - travel vlog,distract
+Safari Crunchyroll - explore feed,distract
+Firefox Netflix - cricket highlights,distract
+chrome.exe Khan Academy - Hash Tables,study
+Safari 9GAG - extreme sports clip,distract
+Safari Stack Overflow - Hash Tables,study
+Firefox Hotstar - live concert clip,distract
+Safari HackerRank - Machine Learning Overfitting,study
+vim.exe - utils.py,study
+chrome.exe W3Schools - TCP vs UDP,study
+Xcode - db.py,study
+Google Chrome Python Documentation - Dynamic Programming,study
+chrome.exe GitHub - Operating System Scheduling,study
+chrome.exe YouTube - Flask Routing lecture,study
+Safari Khan Academy - System Design Load Balancing,study
+Firefox MyAnimeList - minecraft speedrun,distract
+Google Chrome Prime Video - pet videos compilation,distract
+Safari Coursera - Linear Algebra Matrices,study
+PyCharm - auth_middleware.js,study
+Google Chrome HackerRank - Big O Notation,study
+chrome.exe HackerRank - Memory Management,study
+Code.exe - styles.css,study
+Google Chrome Google Scholar - SQL Joins,study
+Google Chrome HackerRank - Flask Routing,study
+Vim - styles.css,study
+IntelliJ IDEA - auth_middleware.js,study
+Safari Python Documentation - React Hooks useEffect,study
+IntelliJ IDEA - README.md,study
+Safari ESPN - true crime documentary clip,distract
+Firefox ESPN - season finale reaction,distract
+Google Chrome HackerRank - Gradient Descent,study
+idea64.exe - Dockerfile,study
+Safari Netflix - gameplay walkthrough,distract
+Google Chrome Reddit - r/interestingasfuck,distract
+firefox.exe Imgur - vlog daily routine,distract
+Google Chrome YouTube - TCP vs UDP lecture,study
+firefox.exe Twitter - blooper reel,distract
+Safari Wikipedia - Memory Management,study
+chrome.exe Pinterest - wedding video viral,distract
+chrome.exe BuzzFeed - extreme sports clip,distract
+Google Chrome Google Scholar - Memory Management,study
+Safari ESPN - season finale reaction,distract
+chrome.exe Crunchyroll - meme dump,distract
+Safari MDN Web Docs - JavaScript Closures,study
+Google Chrome TikTok - live concert clip,distract
+firefox.exe BuzzFeed - makeup tutorial,distract
+chrome.exe HackerRank - Machine Learning Overfitting,study
+Safari Wikipedia - Database Normalization,study
+Telegram - Meme Channel,distract
+firefox.exe Twitch - unboxing haul,distract
+firefox.exe Crunchyroll - gaming montage,distract
+firefox.exe Tumblr - valorant highlights,distract
+firefox.exe Tumblr - unboxing haul,distract
+Google Chrome 9GAG - blooper reel,distract
+chrome.exe ArXiv - Dynamic Programming,study
+Google Chrome YouTube - Computer Networks OSI Model lecture,study
+Google Chrome YouTube - Operating System Scheduling lecture,study
+chrome.exe ESPN - workout motivation clip,distract
+pycharm64.exe - app.py,study
+Firefox Tumblr - viral moment,distract
+Safari Twitch - live concert clip,distract
+Firefox TikTok - conspiracy theory video,distract
+Firefox Instagram - live stream chatting,distract
+Google Chrome Coursera - Database Indexing,study
+Firefox Prime Video - makeup tutorial,distract
+Xcode.exe - merge_sort.cpp,study
+chrome.exe Coursera - JavaScript Closures,study
+Google Chrome Khan Academy - Data Structures Heap,study
+Safari Instagram - live stream chatting,distract
+Safari Prime Video - ASMR video,distract
+Safari Khan Academy - Probability Distributions,study
+firefox.exe Pinterest - stand up comedy clip,distract
+chrome.exe 9GAG - rant video,distract
+Google Chrome freeCodeCamp - Operating System Scheduling,study
+chrome.exe Facebook - cooking mukbang,distract
+pycharm64.exe - merge_sort.cpp,study
+Safari GitHub - Docker Containers Tutorial,study
+Vim - database.py,study
+Code.exe - classifier.py,study
+chrome.exe Prime Video - video game review,distract
+Firefox TikTok - unboxing haul,distract
+chrome.exe GeeksforGeeks - Operating Systems Deadlock,study
+Google Chrome Wikipedia - Hash Tables,study
+Safari Imgur - ASMR video,distract
+chrome.exe Facebook - podcast clip funny,distract
+Firefox Hotstar - viral moment,distract
+Safari ArXiv - Reverse Linked List,study
+Firefox Facebook - shorts compilation,distract
+Visual Studio Code - main.cpp,study
+chrome.exe Imgur - tv show recap,distract
+Firefox Tumblr - prank compilation,distract
+Google Chrome Google Scholar - Gradient Descent,study
+EXCEL.EXE - Budget_Tracker.xlsx,study
+Google Chrome ESPN - stand up comedy clip,distract
+firefox.exe MyAnimeList - podcast clip funny,distract
+Firefox BuzzFeed - live concert clip,distract
+Google Chrome HackerRank - Data Structures Heap,study
+Safari Wikipedia - Data Structures Heap,study
+Safari ESPN - gameplay walkthrough,distract
+chrome.exe Netflix - shorts compilation,distract
+chrome.exe MyAnimeList - satisfying compilation,distract
+chrome.exe W3Schools - Dynamic Programming,study
+chrome.exe LeetCode - Computer Networks OSI Model,study
+Safari YouTube - season finale reaction,distract
+Safari MyAnimeList - cricket highlights,distract
+Safari YouTube - live concert clip,distract
+firefox.exe BuzzFeed - rant video,distract
+Safari HackerRank - Database Normalization,study
+Google Chrome Imgur - reaction video,distract
+Safari Google Scholar - Linear Algebra Matrices,study
+Safari YouTube - talk show clip,distract
+Safari LeetCode - Microservices Architecture,study
+chrome.exe Google Scholar - Dynamic Programming,study
+chrome.exe Coursera - Microservices Architecture,study
+Google Chrome MyAnimeList - prank compilation,distract
+Firefox Crunchyroll - live stream chatting,distract
+chrome.exe 9GAG - travel vlog,distract
+Safari YouTube - shorts compilation,distract
+chrome.exe Khan Academy - Reverse Linked List,study
+chrome.exe GitHub - Binary Search Trees,study
+Safari 9GAG - football highlights,distract
+Google Chrome Facebook - dance trend,distract
+chrome.exe Python Documentation - Gradient Descent,study
+Safari Twitch - anime fight scenes,distract
+Code.exe - api.js,study
+firefox.exe Crunchyroll - music video,distract
+Safari Google Scholar - Database Normalization,study
+Safari freeCodeCamp - Neural Networks Basics,study
+Safari 9GAG - travel vlog,distract
+pycharm64.exe - schema.sql,study
+chrome.exe freeCodeCamp - TCP vs UDP,study
+Xcode - database.py,study
+chrome.exe Prime Video - celebrity interview,distract
+chrome.exe GeeksforGeeks - Database Normalization,study
+Safari Stack Overflow - Flask Routing,study
+Google Chrome Pinterest - season finale reaction,distract
+Safari 9GAG - shorts compilation,distract
+Safari YouTube - makeup tutorial,distract
+Safari Wikipedia - Microservices Architecture,study
+Firefox YouTube - blooper reel,distract
+chrome.exe MDN Web Docs - Big O Notation,study
+chrome.exe freeCodeCamp - Dynamic Programming,study
+Safari TikTok - movie review spoilers,distract
+chrome.exe 9GAG - true crime documentary clip,distract
+Safari freeCodeCamp - Operating System Scheduling,study
+chrome.exe YouTube - Binary Search Trees lecture,study
+Firefox YouTube - behind the scenes,distract
+firefox.exe Twitch - prank compilation,distract
+Google Chrome 9GAG - talk show clip,distract
+firefox.exe YouTube - prank compilation,distract
+chrome.exe Python Documentation - Compiler Design,study
+firefox.exe Netflix - workout motivation clip,distract
+Google Chrome freeCodeCamp - Operating Systems Deadlock,study
+pycharm64.exe - test_auth.py,study
+Google Chrome MDN Web Docs - Compiler Design,study
+chrome.exe Tumblr - music video,distract
+chrome.exe freeCodeCamp - Linear Algebra Matrices,study
+chrome.exe Python Documentation - Kubernetes Basics,study
+Google Chrome GitHub - Docker Containers Tutorial,study
+Firefox BuzzFeed - video game review,distract
+Google Chrome Coursera - Compiler Design,study
+Safari freeCodeCamp - Operating Systems Deadlock,study
+Google Chrome Python Documentation - JavaScript Closures,study
+chrome.exe Hotstar - movie review spoilers,distract
+firefox.exe 9GAG - year in review compilation,distract
+chrome.exe Facebook - workout motivation clip,distract
+chrome.exe TikTok - live concert clip,distract
+Google Chrome GeeksforGeeks - Flask Routing,study
+Safari Hotstar - fan theories,distract
+Safari Instagram - talk show clip,distract
+chrome.exe Pinterest - workout motivation clip,distract
+chrome.exe Hotstar - celebrity gossip news,distract
+Google Chrome Imgur - anime fight scenes,distract
+Firefox Prime Video - viral moment,distract
+chrome.exe Instagram - trending now,distract
+Google Chrome Google Scholar - CSS Flexbox Grid,study
+Google Chrome Instagram - movie review spoilers,distract
+firefox.exe Twitch - tv show recap,distract
+chrome.exe Netflix - extreme sports clip,distract
+Firefox Prime Video - movie trailer reaction,distract
+Safari W3Schools - Dynamic Programming,study
+Firefox Twitter - celebrity interview,distract
+Google Chrome TikTok - shorts compilation,distract
+Safari Pinterest - gaming montage,distract
+firefox.exe Hotstar - funny fails compilation,distract
+chrome.exe MDN Web Docs - Graph Traversal BFS DFS,study
+Safari ESPN - blooper reel,distract
+Firefox Twitch - anime fight scenes,distract
+firefox.exe YouTube - football highlights,distract
+chrome.exe HackerRank - Graph Traversal BFS DFS,study
+Safari Coursera - Machine Learning Overfitting,study
+firefox.exe BuzzFeed - anime fight scenes,distract
+Firefox Netflix - ASMR video,distract
+Google Chrome Prime Video - wedding video viral,distract
+Google Chrome GitHub - Git Rebase vs Merge,study
+idea64.exe - merge_sort.cpp,study
+Google Chrome Hotstar - meme dump,distract
+chrome.exe Twitter - fashion haul try on,distract
+Safari GitHub - Gradient Descent,study
+Google Chrome MyAnimeList - valorant highlights,distract
+chrome.exe BuzzFeed - best moments,distract
+Visual Studio Code - config.yaml,study
+PyCharm - merge_sort.cpp,study
+Google Chrome Khan Academy - Reverse Linked List,study
+Google Chrome ArXiv - TCP vs UDP,study
+Safari MDN Web Docs - Binary Search Trees,study
+chrome.exe Coursera - Binary Search Trees,study
+firefox.exe Hotstar - live concert clip,distract
+Safari BuzzFeed - live stream chatting,distract
+Safari W3Schools - SQL Joins,study
+chrome.exe ArXiv - Gradient Descent,study
+Firefox Crunchyroll - video game review,distract
+chrome.exe Coursera - Hash Tables,study
+Google Chrome Khan Academy - TCP vs UDP,study
+chrome.exe Tumblr - minecraft speedrun,distract
+Google Chrome TikTok - travel vlog,distract
+firefox.exe Facebook - behind the scenes,distract
+firefox.exe Crunchyroll - anime fight scenes,distract
+chrome.exe freeCodeCamp - Machine Learning Overfitting,study
+Safari ESPN - football highlights,distract
+Google Chrome MDN Web Docs - Database Indexing,study
+firefox.exe Facebook - live stream chatting,distract
+Google Chrome GitHub - Dynamic Programming,study
+chrome.exe Khan Academy - CSS Flexbox Grid,study
+Visual Studio Code - router.go,study
+powershell.exe - npm run build,study
+Google Chrome HackerRank - Database Indexing,study
+pycharm64.exe - index.html,study
+chrome.exe Wikipedia - System Design Load Balancing,study
+firefox.exe Instagram - extreme sports clip,distract
+firefox.exe Pinterest - fashion haul try on,distract
+chrome.exe HackerRank - Hash Tables,study
+firefox.exe Instagram - funny fails compilation,distract
+Safari Khan Academy - Dynamic Programming,study
+Google Chrome MDN Web Docs - SQL Joins,study
+pycharm64.exe - preprocess.py,study
+Visual Studio Code - script.js,study
+Firefox ESPN - vlog daily routine,distract
+chrome.exe Twitter - unboxing haul,distract
+chrome.exe GeeksforGeeks - Reverse Linked List,study
+Google Chrome LeetCode - Database Normalization,study
+Google Chrome Netflix - fashion haul try on,distract
+Xcode - requirements.txt,study
+Google Chrome MDN Web Docs - Database Normalization,study
+Xcode - Dockerfile,study
+chrome.exe Google Scholar - Probability Distributions,study
+Google Chrome HackerRank - Two Sum,study
+chrome.exe freeCodeCamp - CSS Flexbox Grid,study
+Google Chrome Wikipedia - System Design Load Balancing,study
+Google Chrome Coursera - Operating System Scheduling,study
+Google Chrome freeCodeCamp - Kubernetes Basics,study
+Google Chrome Prime Video - conspiracy theory video,distract
+sublime_text.exe - styles.css,study
+chrome.exe GitHub - Two Sum,study
+chrome.exe Netflix - pet videos compilation,distract
+Google Chrome ESPN - behind the scenes,distract
+Xcode.exe - server.py,study
+chrome.exe Facebook - behind the scenes,distract
+firefox.exe Twitch - workout motivation clip,distract
+Safari GitHub - Binary Search Trees,study
+Xcode - config.yaml,study
+Safari Prime Video - valorant highlights,distract
+chrome.exe GeeksforGeeks - React Hooks useEffect,study
 chrome.exe LeetCode - Two Sum,study
-chrome.exe LeetCode - Binary Tree Inorder Traversal,study
-chrome.exe LeetCode - Merge Intervals,study
-chrome.exe GeeksforGeeks - Binary Search,study
-chrome.exe GeeksforGeeks - Dynamic Programming,study
-chrome.exe GeeksforGeeks - Graph Algorithms,study
-chrome.exe Stack Overflow - flask sqlalchemy error,study
-chrome.exe Stack Overflow - python list comprehension,study
-chrome.exe Stack Overflow - react useEffect cleanup,study
-chrome.exe Stack Overflow - git merge conflict,study
-chrome.exe YouTube - CS50 Lecture 3,study
-chrome.exe YouTube - CS50 Lecture 7 Hash Tables,study
-chrome.exe YouTube - 3Blue1Brown Neural Networks,study
-chrome.exe YouTube - Andrew Ng Machine Learning,study
-chrome.exe Wikipedia - Logistic Regression,study
-chrome.exe Wikipedia - Turing Machine,study
-chrome.exe Wikipedia - Laplace Transform,study
-chrome.exe GitHub - studybuddy commits,study
-chrome.exe GitHub - pull request review,study
-chrome.exe GitHub - issue tracker,study
-chrome.exe Python Documentation - sklearn,study
-chrome.exe Python Documentation - flask,study
-chrome.exe React Documentation - useState,study
-chrome.exe MDN Web Docs - Array.prototype.map,study
-chrome.exe Coursera - Machine Learning Specialization,study
-chrome.exe Khan Academy - Linear Algebra,study
-chrome.exe Khan Academy - Probability,study
-chrome.exe Google Docs - DBMS Notes,study
-chrome.exe Google Docs - Lab Report,study
-chrome.exe Notion - CS401 Lecture Notes,study
-chrome.exe Notion - Project Roadmap,study
-chrome.exe Overleaf - Research Paper Draft,study
-chrome.exe Google Scholar - transformer architectures,study
-chrome.exe Gmail - Internship Application Confirmation,study
-chrome.exe LinkedIn - Software Engineer Internship,study
-chrome.exe Internshala - Applications,study
-WINWORD.EXE Resume.docx,study
-EXCEL.EXE Lab_Data.xlsx,study
-POWERPNT.EXE Project_Presentation.pptx,study
-Terminal - npm run dev,study
-Terminal - python manage.py runserver,study
-Terminal - git push origin main,study
-Postman - API testing,study
-DataGrip - SQL query,study
-draw.io - ER Diagram,study
-chrome.exe Google Calendar - Exam Schedule,study
-chrome.exe AWS Documentation - EC2 setup,study
-chrome.exe Microsoft Learn - AZ-900,study
-Anaconda Prompt - jupyter notebook,study
-Jupyter Notebook - data_analysis.ipynb,study
-chrome.exe YouTube - minecraft lets play,distract
-chrome.exe YouTube - funny moments compilation,distract
-chrome.exe YouTube - top 10 anime fights,distract
-chrome.exe YouTube - meme compilation 2026,distract
-chrome.exe YouTube - football highlights,distract
-chrome.exe YouTube - reaction video,distract
-chrome.exe Instagram - Feed,distract
-chrome.exe Instagram - Reels,distract
-chrome.exe Instagram - Direct Messages,distract
-chrome.exe Twitter - Home,distract
-chrome.exe Twitter - Trending,distract
-chrome.exe Reddit - r/gaming,distract
-chrome.exe Reddit - r/memes,distract
-chrome.exe Reddit - r/funny,distract
-VALORANT.exe VALORANT,distract
-csgo.exe Counter-Strike 2,distract
-LeagueClient.exe League of Legends,distract
-chrome.exe Netflix - Stranger Things,distract
-chrome.exe Netflix - Browse,distract
-chrome.exe Prime Video - The Boys,distract
-chrome.exe Hotstar - Cricket Highlights,distract
-chrome.exe Spotify - Browse,distract
-Spotify.exe Discover Weekly,distract
-chrome.exe WhatsApp Web,distract
-WhatsApp.exe Chats,distract
-Discord.exe gaming-chat,distract
-Discord.exe voice-call,distract
-chrome.exe Facebook - News Feed,distract
-chrome.exe Pinterest - Home Feed,distract
-chrome.exe Amazon - Shopping Cart,distract
-chrome.exe Flipkart - Deals,distract
-chrome.exe Snapchat Web,distract
-chrome.exe TikTok - For You,distract
-chrome.exe 9GAG - Trending Memes,distract
-Steam.exe Library,distract
-Steam.exe Store - Sale,distract
-chrome.exe Twitch - Valorant Stream,distract
-chrome.exe Twitch - Just Chatting,distract
-chrome.exe MyAnimeList - Currently Watching,distract
-chrome.exe Crunchyroll - Episode 12,distract
-chrome.exe YouTube - vlog daily life,distract
-chrome.exe YouTube - unboxing video,distract
-chrome.exe BGMI Lite,distract
-chrome.exe Free Fire,distract
-chrome.exe Quora - random question feed,distract
-PUBG.exe PUBG Mobile,distract
-chrome.exe YouTube - music video,distract
-chrome.exe SoundCloud - Browse,distract
-chrome.exe Telegram Web,distract
-chrome.exe online shopping - sneakers,distract
-chrome.exe Flipboard - News Feed,distract
-chrome.exe 4chan - random board,distract
-chrome.exe Imgur - Trending,distract
-chrome.exe Tumblr - Dashboard,distract
-chrome.exe BuzzFeed - Quiz,distract
-chrome.exe celebrity gossip article,distract
-chrome.exe horoscope today,distract
-chrome.exe online multiplayer chess casual,distract
-chrome.exe YouTube Shorts,distract
-chrome.exe Roblox - Adopt Me,distract
-Minecraft.exe Singleplayer World,distract
-chrome.exe Disney Plus Hotstar - Movies,distract
-chrome.exe ESPN - Live Scores,distract
+Safari HackerRank - Dynamic Programming,study
+Preview - DBMS_Notes.pdf,study
+Google Chrome Google Scholar - Microservices Architecture,study
+Safari YouTube - Big O Notation lecture,study
+Code.exe - auth_middleware.js,study
+chrome.exe Crunchyroll - talk show clip,distract
+vim.exe - index.html,study
+Google Chrome LeetCode - Data Structures Heap,study
+Firefox BuzzFeed - workout motivation clip,distract
+chrome.exe LeetCode - Recursion Explained,study
+Safari LeetCode - Graph Traversal BFS DFS,study
+chrome.exe GitHub - Probability Distributions,study
+Notion - Semester Planner,study
+Firefox TikTok - true crime documentary clip,distract
+Safari ArXiv - Computer Networks OSI Model,study
+Google Chrome TikTok - explore feed,distract
+Google Chrome GeeksforGeeks - Data Structures Heap,study
+Safari GeeksforGeeks - React Hooks useEffect,study
+chrome.exe Imgur - live concert clip,distract
+Safari LeetCode - Compiler Design,study
+Safari GeeksforGeeks - SQL Joins,study
+chrome.exe Twitter - conspiracy theory video,distract
+Safari freeCodeCamp - Computer Networks OSI Model,study
+firefox.exe YouTube - wedding video viral,distract
+Firefox Twitter - gameplay walkthrough,distract
+Safari Hotstar - blooper reel,distract
+Firefox ESPN - cricket highlights,distract
+Safari Crunchyroll - blooper reel,distract
+Google Chrome LeetCode - Big O Notation,study
+sublime_text.exe - api.js,study
+Jupyter Notebook - eda_analysis.ipynb,study
+Safari LeetCode - Kubernetes Basics,study
+firefox.exe Crunchyroll - live concert clip,distract
+Google Chrome Prime Video - challenge video,distract
+Google Chrome Google Scholar - Database Normalization,study
+chrome.exe Stack Overflow - Hash Tables,study
+chrome.exe freeCodeCamp - Database Indexing,study
+Safari YouTube - anime fight scenes,distract
+Safari MDN Web Docs - Memory Management,study
+Google Chrome MDN Web Docs - Binary Search Trees,study
+Google Chrome Khan Academy - Big O Notation,study
+chrome.exe ESPN - movie review spoilers,distract
+Google Chrome YouTube - shorts compilation,distract
+firefox.exe Netflix - pet videos compilation,distract
+firefox.exe Pinterest - celebrity drama,distract
+idea64.exe - styles.css,study
+Xcode.exe - classifier.py,study
+pycharm64.exe - App.css,study
+Safari Twitter - celebrity drama,distract
+Firefox Crunchyroll - tv show recap,distract
+Google Chrome YouTube - Probability Distributions lecture,study
+Safari ESPN - dance trend,distract
+vim.exe - linked_list.py,study
+Google Chrome Hotstar - vlog daily routine,distract
+Google Chrome Coursera - Graph Traversal BFS DFS,study
+chrome.exe W3Schools - Transformer Architecture,study
+Google Chrome Twitch - vlog daily routine,distract
+Safari YouTube - cricket highlights,distract
+Firefox Twitter - shorts compilation,distract
+chrome.exe GeeksforGeeks - Machine Learning Overfitting,study
+Microsoft PowerPoint - Project_Presentation.pptx,study
+Google Chrome YouTube - SQL Joins lecture,study
+Firefox Tumblr - funny fails compilation,distract
+chrome.exe Hotstar - gaming montage,distract
+Google Chrome Crunchyroll - travel vlog,distract
+Safari YouTube - Docker Containers Tutorial lecture,study
+chrome.exe Imgur - meme dump,distract
+Sublime Text - requirements.txt,study
+PyCharm - database.py,study
+sublime_text.exe - linked_list.py,study
+firefox.exe TikTok - celebrity gossip news,distract
+chrome.exe LeetCode - Operating System Scheduling,study
+Google Chrome MDN Web Docs - Recursion Explained,study
+Safari GeeksforGeeks - Gradient Descent,study
+pycharm64.exe - webpack.config.js,study
+chrome.exe freeCodeCamp - Database Normalization,study
+Xcode.exe - config.yaml,study
+Google Chrome Tumblr - makeup tutorial,distract
+Google Chrome Hotstar - cricket highlights,distract
+chrome.exe Khan Academy - Flask Routing,study
+Terminal - npm install,study
+Safari Instagram - workout motivation clip,distract
+Google Chrome Crunchyroll - makeup tutorial,distract
+Code.exe - database.py,study
+chrome.exe Instagram - podcast clip funny,distract
+Safari Instagram - challenge video,distract
+chrome.exe Stack Overflow - Operating System Scheduling,study
+Safari BuzzFeed - cooking mukbang,distract
+Safari Wikipedia - Machine Learning Overfitting,study
+Safari ArXiv - Database Indexing,study
+Safari Instagram - story time video,distract
+idea64.exe - two_sum.py,study
+Safari Instagram - shorts compilation,distract
+Safari YouTube - Kubernetes Basics lecture,study
+Google Chrome Stack Overflow - Transformer Architecture,study
+chrome.exe GitHub - Git Rebase vs Merge,study
+Google Chrome GitHub - Two Sum,study
+Firefox Instagram - behind the scenes,distract
+Google Chrome Python Documentation - Memory Management,study
+Google Chrome Prime Video - viral moment,distract
+Firefox Pinterest - challenge video,distract
+Safari GitHub - Memory Management,study
+firefox.exe 9GAG - live concert clip,distract
+Safari HackerRank - Data Structures Heap,study
+Google Chrome Instagram - stand up comedy clip,distract
+Firefox TikTok - celebrity interview,distract
+Xcode.exe - test_auth.py,study
+Firefox Twitter - unboxing haul,distract
+Firefox Pinterest - rant video,distract
+Vim - test_auth.py,study
+Google Chrome Twitch - season finale reaction,distract
+chrome.exe W3Schools - Data Structures Heap,study
+Code.exe - db.py,study
+Firefox Instagram - podcast clip funny,distract
+idea64.exe - preprocess.py,study
+Google Chrome Tumblr - blooper reel,distract
+Google Chrome Twitch - music video,distract
+firefox.exe Instagram - celebrity interview,distract
+Safari Imgur - viral moment,distract
+firefox.exe BuzzFeed - fan theories,distract
+IntelliJ IDEA - linked_list.py,study
+Google Chrome 9GAG - season finale reaction,distract
+chrome.exe 9GAG - video game review,distract
+Google Chrome Python Documentation - Database Normalization,study
+Google Chrome Stack Overflow - Computer Networks OSI Model,study
+Firefox Twitch - unboxing haul,distract
+chrome.exe Imgur - for you page,distract
+Google Chrome GeeksforGeeks - Two Sum,study
+chrome.exe W3Schools - Two Sum,study
+Safari Imgur - meme dump,distract
+chrome.exe Twitter - dance trend,distract
+Safari Python Documentation - Flask Routing,study
+Google Chrome freeCodeCamp - Dynamic Programming,study
+Google Chrome Coursera - Computer Networks OSI Model,study
+chrome.exe GitHub - Recursion Explained,study
+firefox.exe Tumblr - makeup tutorial,distract
+chrome.exe Google Scholar - Git Rebase vs Merge,study
+chrome.exe YouTube - prank compilation,distract
+chrome.exe 9GAG - blooper reel,distract
+Firefox Prime Video - celebrity gossip news,distract
+Google Chrome Google Scholar - Operating System Scheduling,study
+chrome.exe Khan Academy - Big O Notation,study
+chrome.exe ArXiv - Transformer Architecture,study
+chrome.exe ArXiv - Neural Networks Basics,study
+Safari LeetCode - Recursion Explained,study
+chrome.exe HackerRank - Dynamic Programming,study
+chrome.exe Prime Video - funny fails compilation,distract
+Safari Netflix - meme dump,distract
+chrome.exe Pinterest - tv show recap,distract
+Google Chrome GeeksforGeeks - Big O Notation,study
+Safari Python Documentation - Database Indexing,study
+firefox.exe Netflix - best moments,distract
+Sublime Text - README.md,study
+firefox.exe Twitch - funny fails compilation,distract
+Google Chrome GitHub - Flask Routing,study
+Google Chrome Netflix - movie trailer reaction,distract
+Safari Twitch - valorant highlights,distract
+chrome.exe GitHub - Transformer Architecture,study
+firefox.exe Crunchyroll - behind the scenes,distract
+Safari BuzzFeed - trending now,distract
+Safari Crunchyroll - extreme sports clip,distract
+chrome.exe Coursera - Memory Management,study
+Safari Twitch - minecraft speedrun,distract
+Safari MDN Web Docs - SQL Joins,study
+Safari Khan Academy - Big O Notation,study
+Safari Coursera - JavaScript Closures,study
+Google Chrome LeetCode - Operating System Scheduling,study
+Google Chrome Twitch - celebrity gossip news,distract
+Vim - train_model.py,study
+firefox.exe Instagram - celebrity drama,distract
+firefox.exe MyAnimeList - gaming montage,distract
+Google Chrome Python Documentation - Git Rebase vs Merge,study
+Safari YouTube - movie review spoilers,distract
+Safari Python Documentation - Data Structures Heap,study
+Safari YouTube - Probability Distributions lecture,study
+chrome.exe GeeksforGeeks - Graph Traversal BFS DFS,study
+Google Chrome HackerRank - Graph Traversal BFS DFS,study
+Safari YouTube - TCP vs UDP lecture,study
+Google Chrome BuzzFeed - story time video,distract
+chrome.exe ESPN - dance trend,distract
+Google Chrome Tumblr - minecraft speedrun,distract
+firefox.exe Facebook - best moments,distract
+Google Chrome YouTube - fashion haul try on,distract
+Google Chrome LeetCode - JavaScript Closures,study
+firefox.exe Facebook - blooper reel,distract
+Firefox Imgur - funny fails compilation,distract
+Safari Python Documentation - Compiler Design,study
+Safari TikTok - trending now,distract
+Google Chrome 9GAG - music video,distract
+chrome.exe Stack Overflow - Memory Management,study
+chrome.exe MDN Web Docs - JavaScript Closures,study
+chrome.exe Coursera - CSS Flexbox Grid,study
+Safari W3Schools - Database Normalization,study
+Safari GeeksforGeeks - Memory Management,study
+Firefox Instagram - anime fight scenes,distract
+chrome.exe Imgur - cricket highlights,distract
+chrome.exe GitHub - Microservices Architecture,study
+Google Chrome W3Schools - Kubernetes Basics,study
+firefox.exe Twitter - movie review spoilers,distract
+Safari Khan Academy - Gradient Descent,study
+Firefox TikTok - anime fight scenes,distract
+firefox.exe 9GAG - video game review,distract
+chrome.exe TikTok - explore feed,distract
+PyCharm - models.py,study
+chrome.exe Imgur - cooking mukbang,distract
+Google Chrome Facebook - music video,distract
+Google Chrome BuzzFeed - pet videos compilation,distract
+Safari Imgur - tv show recap,distract
+firefox.exe Pinterest - rant video,distract
+Safari Coursera - Docker Containers Tutorial,study
+IntelliJ IDEA - Dockerfile,study
+chrome.exe HackerRank - Git Rebase vs Merge,study
+chrome.exe Imgur - movie review spoilers,distract
+chrome.exe Google Scholar - Neural Networks Basics,study
+IntelliJ IDEA - main.py,study
+firefox.exe 9GAG - celebrity interview,distract
+Safari Pinterest - pet videos compilation,distract
+chrome.exe Netflix - prank compilation,distract
+Firefox BuzzFeed - tv show recap,distract
+chrome.exe HackerRank - Microservices Architecture,study
+Google Chrome Crunchyroll - fan theories,distract
+Safari Prime Video - viral moment,distract
+Microsoft Word - Lab_Report.docx,study
+Google Chrome Wikipedia - TCP vs UDP,study
+Google Chrome Stack Overflow - Microservices Architecture,study
+Google Chrome W3Schools - Dynamic Programming,study
+Google Chrome TikTok - true crime documentary clip,distract
+Firefox 9GAG - story time video,distract
+chrome.exe Stack Overflow - Computer Networks OSI Model,study
+Safari BuzzFeed - celebrity interview,distract
+chrome.exe freeCodeCamp - Neural Networks Basics,study
+chrome.exe GitHub - Gradient Descent,study
+Safari Twitter - for you page,distract
+Firefox Crunchyroll - prank compilation,distract
+Google Chrome W3Schools - Memory Management,study
+chrome.exe MDN Web Docs - Linear Algebra Matrices,study
+Safari freeCodeCamp - Transformer Architecture,study
+chrome.exe LeetCode - Graph Traversal BFS DFS,study
+firefox.exe Crunchyroll - stand up comedy clip,distract
+pycharm64.exe - App.jsx,study
+chrome.exe ESPN - wedding video viral,distract
+chrome.exe YouTube - movie review spoilers,distract
+firefox.exe Prime Video - year in review compilation,distract
+chrome.exe Twitch - prank compilation,distract
+Firefox Twitch - minecraft speedrun,distract
+firefox.exe Tumblr - ASMR video,distract
+chrome.exe Instagram - travel vlog,distract
+Google Chrome ESPN - cricket highlights,distract
+Safari Khan Academy - Graph Traversal BFS DFS,study
+firefox.exe ESPN - cricket highlights,distract
+Google Chrome Pinterest - cricket highlights,distract
+firefox.exe Hotstar - explore feed,distract
+Safari GeeksforGeeks - Docker Containers Tutorial,study
+chrome.exe Crunchyroll - tv show recap,distract
+Safari Coursera - Dynamic Programming,study
+chrome.exe Twitter - fan theories,distract
+Safari Tumblr - prank compilation,distract
+Google Chrome Python Documentation - Graph Traversal BFS DFS,study
+chrome.exe ESPN - celebrity interview,distract
+Firefox Pinterest - live concert clip,distract
+Google Chrome Prime Video - true crime documentary clip,distract
+Firefox 9GAG - anime fight scenes,distract
+sublime_text.exe - package.json,study
+chrome.exe HackerRank - Linear Algebra Matrices,study
+Firefox Crunchyroll - wedding video viral,distract
+pycharm64.exe - main.jsx,study
+chrome.exe ESPN - reaction video,distract
+chrome.exe Stack Overflow - Flask Routing,study
+chrome.exe Wikipedia - Linear Algebra Matrices,study
+firefox.exe 9GAG - trending now,distract
+chrome.exe Google Scholar - Gradient Descent,study
+Firefox Hotstar - wedding video viral,distract
+Google Chrome Google Scholar - Hash Tables,study
+Safari HackerRank - Flask Routing,study
+Firefox Pinterest - travel vlog,distract
+chrome.exe YouTube - JavaScript Closures lecture,study
+Safari Coursera - Database Indexing,study
+chrome.exe HackerRank - Probability Distributions,study
+chrome.exe Imgur - workout motivation clip,distract
+Google Chrome GitHub - Neural Networks Basics,study
+chrome.exe Twitter - podcast clip funny,distract
+Google Chrome Wikipedia - Operating Systems Deadlock,study
+Firefox Twitter - vlog daily routine,distract
+Safari Tumblr - rant video,distract
+Firefox Facebook - satisfying compilation,distract
+sublime_text.exe - main.jsx,study
+chrome.exe TikTok - tv show recap,distract
+Google Chrome ESPN - year in review compilation,distract
