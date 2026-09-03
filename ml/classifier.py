@@ -11,7 +11,7 @@ MODEL_PATH = os.path.join(MODEL_DIR, "model.pkl")
 EMBEDDINGS_PATH = os.path.join(MODEL_DIR, "train_embeddings.npy")
 LABELS_PATH = os.path.join(MODEL_DIR, "train_labels.npy")
 
-# loaded once so predict() doesn't reload it on every call
+# loaded once at module import so retrain() and predict() reuse the same in-memory model instead of re-downloading/re-loading per call
 EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
 
 

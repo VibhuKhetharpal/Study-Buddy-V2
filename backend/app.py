@@ -32,13 +32,13 @@ def retrain_model():
 
 @app.route("/log", methods=["POST"])
 def log_activity():
-    data = request.json
+    data = request.json or {}
     session_id = data.get("session_id")
-    app_name = data.get("app_name")
-    window_title = data.get("window_title")
+    app_name = (data.get("app_name") or "").strip() or "Unknown"
+    window_title = (data.get("window_title") or "").strip()
 
-    if not window_title or window_title.strip() == "":
-        return jsonify({"status": "skipped"}), 200
+    if not window_title:
+        window_title = app_name
 
     if session_id is None:
         return jsonify({"error": "session_id required"}), 400
