@@ -3,7 +3,7 @@ import Badge from "./Badge.jsx";
 import LabelButtons from "./LabelButtons.jsx";
 import ActionButton from "./ActionButton.jsx";
 import { groupLogs, dominantLabel, fmtTime } from "../utils.js";
-import { setLabel, setBulkLabel } from "../api.js";
+import { setLabel, setBulkLabel, deleteLog } from "../api.js";
 
 function WindowRow({ sessionId, winData, onChanged }) {
   const [open, setOpen] = useState(false);
@@ -99,6 +99,29 @@ function WindowRow({ sessionId, winData, onChanged }) {
                   activeLabel={entry.user_label}
                   onSelect={(l) => setLabel(entry.id, l).then(() => onChanged())}
                 />
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (window.confirm(`Delete this log entry for "${winData.title}"?`)) {
+                      deleteLog(entry.id).then(() => onChanged());
+                    }
+                  }}
+                  title="Delete log entry"
+                  style={{
+                    marginLeft: "auto",
+                    background: "transparent",
+                    border: "none",
+                    color: "#484f58",
+                    cursor: "pointer",
+                    fontSize: "0.75rem",
+                    padding: "2px 6px",
+                    borderRadius: 4,
+                  }}
+                  onMouseEnter={(e) => (e.target.style.color = "#f85149")}
+                  onMouseLeave={(e) => (e.target.style.color = "#484f58")}
+                >
+                  ✕
+                </button>
               </div>
             );
           })}

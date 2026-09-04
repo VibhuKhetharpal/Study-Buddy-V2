@@ -13,8 +13,6 @@ except ImportError:
     requests = None
 
 SERVER = os.environ.get("STUDY_BUDDY_SERVER", "http://127.0.0.1:5000")
-DISTRACT_THRESHOLD_SECONDS = 30
-NOTIFY_COOLDOWN_SECONDS = 30
 
 BROWSER_SCRIPTS = {
     "Google Chrome": 'tell application "Google Chrome" to if (count of windows) > 0 then return title of active tab of front window',
@@ -42,6 +40,24 @@ def _http_post_json(url, payload=None, timeout=2):
     req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.status, json.loads(resp.read().decode("utf-8"))
+
+
+def format_time(seconds):
+    seconds = int(seconds)
+    if seconds < 60:
+        return f"{seconds}s"
+    m = seconds // 60
+    s = seconds % 60
+    if m < 60:
+        return f"{m}m {s}s" if s > 0 else f"{m}m"
+    h = m // 60
+    rem_m = m % 60
+    return f"{h}h {rem_m}m" if rem_m > 0 else f"{h}h"
+
+
+def is_dashboard_window(title, app):
+    t = (title or "").lower()
+    return "5173" in t or "study_buddy" in t or "study-buddy" in t or t == "frontend" or "study buddy" in t
 
 
 def get_frontmost_app():
@@ -133,12 +149,22 @@ def check_permissions():
     return True
 
 
-def notify(message):
+def play_sound():
     try:
+        subprocess.Popen(['afplay', '/System/Library/Sounds/Ping.aiff'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except Exception:
+        pass
+
+
+def notify(message, with_sound=False):
+    try:
+        sound_flag = 'sound name "Ping"' if with_sound else ''
         subprocess.run([
             'osascript', '-e',
-            f'display notification "{message}" with title "Study Buddy"'
+            f'display notification "{message}" with title "Study Buddy" {sound_flag}'
         ], timeout=2)
+        if with_sound:
+            play_sound()
     except Exception:
         pass
 
@@ -210,32 +236,49 @@ if __name__ == "__main__":
     last_app = None
     current_label = None
     distract_start = None
-    last_notify = None
+    notified_milestones = set()
 
     try:
         while True:
             title, app, _ = get_active_window()
 
-            if title != last_title or app != last_app:
-                last_title = title
-                last_app = app
-                current_label = send_log(session_id, app, title)
-                tag = f"[{current_label.upper()}]" if current_label else "[...]"
-                print(f"{tag:12} {app} — {title}")
+            # Ignore self when switching to dashboard
+            if not is_dashboard_window(title, app):
+                if title != last_title or app != last_app:
+                    last_title = title
+                    last_app = app
+                    current_label = send_log(session_id, app, title)
+                    tag = f"[{current_label.upper()}]" if current_label else "[...]"
+                    print(f"{tag:12} {app} — {title}")
 
             now = time.time()
             if current_label == "distract":
                 if distract_start is None:
                     distract_start = now
+                    notified_milestones.clear()
+
                 elapsed = now - distract_start
-                if elapsed >= DISTRACT_THRESHOLD_SECONDS and (
-                    last_notify is None or now - last_notify >= NOTIFY_COOLDOWN_SECONDS
-                ):
-                    notify(f"You've been distracted for {int(elapsed)}s. Get back to work!")
-                    last_notify = now
+                dur_str = format_time(elapsed)
+
+                # Milestone 1: 30s nudge (silent)
+                if elapsed >= 30 and 30 not in notified_milestones:
+                    notified_milestones.add(30)
+                    notify(f"You've been distracted for {dur_str}. Time to refocus!", with_sound=False)
+
+                # Milestone 2: 1m mark (sound alert)
+                if elapsed >= 60 and 60 not in notified_milestones:
+                    notified_milestones.add(60)
+                    notify(f"You've been distracted for {dur_str}. Time to refocus!", with_sound=True)
+
+                # Milestone 3+: 5m and every 5m after (sound alert)
+                if elapsed >= 300:
+                    slot = int(elapsed // 300) * 300
+                    if slot not in notified_milestones:
+                        notified_milestones.add(slot)
+                        notify(f"You've been distracted for {dur_str}. Get back to work!", with_sound=True)
             else:
                 distract_start = None
-                last_notify = None
+                notified_milestones.clear()
 
             time.sleep(2)
     except KeyboardInterrupt:

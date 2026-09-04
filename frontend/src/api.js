@@ -48,3 +48,21 @@ export async function setBulkLabel(sessionId, windowTitle, label) {
   return r.json();
 }
 
+export async function deleteSession(sessionId) {
+  const r = await fetch(`${BASE}/session/${sessionId}`, { method: "DELETE" });
+  return r.json();
+}
+
+export async function deleteLog(logId) {
+  const r = await fetch(`${BASE}/log/${logId}`, { method: "DELETE" });
+  return r.json();
+}
+
+export async function stopSession(sessionId) {
+  const r = await fetch(`${BASE}/stop`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(sessionId ? { session_id: sessionId } : {}),
+  });
+  return r.json();
+}

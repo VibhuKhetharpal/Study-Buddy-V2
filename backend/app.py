@@ -17,7 +17,9 @@ from db import (
     get_session_logs,
     get_latest_session_id,
     bulk_label_window,
-    get_session_window_titles
+    get_session_window_titles,
+    delete_session,
+    delete_log
 )
 
 load_dotenv()
@@ -40,7 +42,9 @@ def stop_session():
     data = request.json or {}
     session_id = data.get("session_id")
     if session_id is None:
-        return jsonify({"error": "session_id required"}), 400
+        session_id = get_latest_session_id()
+    if session_id is None:
+        return jsonify({"error": "no active session"}), 400
 
     summary = end_session(session_id)
     total = summary["study"] + summary["distract"]
@@ -129,6 +133,18 @@ def sessions():
 @app.route("/session/<int:session_id>/logs")
 def session_logs(session_id):
     return jsonify(get_session_logs(session_id))
+
+
+@app.route("/session/<int:session_id>", methods=["DELETE"])
+def remove_session(session_id):
+    delete_session(session_id)
+    return jsonify({"success": True})
+
+
+@app.route("/log/<int:log_id>", methods=["DELETE"])
+def remove_log(log_id):
+    delete_log(log_id)
+    return jsonify({"success": True})
 
 
 @app.route("/latest_session")

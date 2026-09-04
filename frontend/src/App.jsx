@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Dashboard from "./Dashboard.jsx";
 import History from "./History.jsx";
+import Analytics from "./Analytics.jsx";
 
 function NavTab({ label, active, onClick }) {
   const [hover, setHover] = useState(false);
@@ -29,7 +30,7 @@ function NavTab({ label, active, onClick }) {
 }
 
 export default function App() {
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState("live");
 
   return (
     <div>
@@ -37,16 +38,20 @@ export default function App() {
         style={{
           display: "flex",
           gap: "0.5rem",
-          padding: "1.5rem 2rem",
+          padding: "1.25rem 2rem",
           background: "#0d1117",
           borderBottom: "1px solid #21262d",
           fontFamily: "'JetBrains Mono', monospace",
         }}
       >
-        <NavTab label="dashboard" active={page === "dashboard"} onClick={() => setPage("dashboard")} />
+        <NavTab label="live session" active={page === "live"} onClick={() => setPage("live")} />
         <NavTab label="history" active={page === "history"} onClick={() => setPage("history")} />
+        <NavTab label="analytics" active={page === "analytics"} onClick={() => setPage("analytics")} />
       </nav>
-      {page === "dashboard" ? <Dashboard /> : <History />}
+
+      {page === "live" && <Dashboard />}
+      {page === "history" && <History />}
+      {page === "analytics" && <Analytics />}
     </div>
   );
 }

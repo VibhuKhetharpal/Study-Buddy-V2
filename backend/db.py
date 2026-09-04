@@ -224,6 +224,21 @@ def get_session_window_titles(session_id):
     return [{"app_name": r[0], "window_title": r[1]} for r in rows]
 
 
+def delete_session(session_id):
+    conn = get_connection()
+    conn.execute("DELETE FROM activity_logs WHERE session_id=?", (session_id,))
+    conn.execute("DELETE FROM sessions WHERE id=?", (session_id,))
+    conn.commit()
+    conn.close()
+
+
+def delete_log(log_id):
+    conn = get_connection()
+    conn.execute("DELETE FROM activity_logs WHERE id=?", (log_id,))
+    conn.commit()
+    conn.close()
+
+
 create_tables()
 
 if __name__ == "__main__":
