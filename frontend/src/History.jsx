@@ -14,7 +14,9 @@ function SessionCard({ session }) {
     const next = !open;
     setOpen(next);
     if (next && rows === null) {
-      getSessionLogs(session.id).then(setRows);
+      getSessionLogs(session.id)
+        .then((data) => setRows(Array.isArray(data) ? data : []))
+        .catch(() => setRows([]));
     }
   };
 
@@ -59,7 +61,15 @@ function SessionCard({ session }) {
           {rows === null ? (
             <div style={{ color: "#484f58", fontSize: "0.75rem", padding: "1rem 1.25rem" }}>loading...</div>
           ) : (
-            <LogTree sessionId={session.id} rows={rows} onChanged={() => getSessionLogs(session.id).then(setRows)} />
+            <LogTree
+              sessionId={session.id}
+              rows={rows}
+              onChanged={() =>
+                getSessionLogs(session.id)
+                  .then((data) => setRows(Array.isArray(data) ? data : []))
+                  .catch(() => setRows([]))
+              }
+            />
           )}
         </div>
       )}
@@ -80,7 +90,9 @@ export default function History() {
   const [sessions, setSessions] = useState(null);
 
   useEffect(() => {
-    getSessions().then(setSessions);
+    getSessions()
+      .then((data) => setSessions(Array.isArray(data) ? data : []))
+      .catch(() => setSessions([]));
   }, []);
 
   return (
@@ -98,4 +110,3 @@ export default function History() {
     </div>
   );
 }
-

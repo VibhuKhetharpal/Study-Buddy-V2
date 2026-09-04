@@ -1,26 +1,19 @@
-"""
-Computes model accuracy across ALL logged entries that already have a
-confirmed user_label (real ground truth from your own corrections), plus
-re-predicts every entry fresh using the CURRENT model (in case the model
-was retrained after some entries were logged, so predicted_label in the
-DB might be stale).
-
-This gives you the most honest, defensible number: "current model accuracy
-against all human-confirmed real usage data."
-
-Run from inside backend/ folder:
-    python ../accuracy_test.py
-"""
 import sqlite3
 import os
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "ml"))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(BASE_DIR, "ml"))
 from classifier import predict
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "backend", "database.db")
+DB_PATH = os.path.join(BASE_DIR, "backend", os.environ.get("DB_FILENAME", "database.db"))
+
 
 def main():
+    if not os.path.exists(DB_PATH):
+        print(f"Database not found at {DB_PATH}")
+        return
+
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
     cur.execute(
@@ -31,10 +24,14 @@ def main():
     conn.close()
 
     total = len(rows)
+    if total == 0:
+        print("No human-labeled entries found in database.")
+        return
+
     correct = 0
     wrong = []
 
-    print(f"Re-predicting {total} entries with CURRENT model...\n")
+    print(f"Re-predicting {total} entries with current model...\n")
 
     for app, title, true_label in rows:
         fresh_prediction = predict(f"{app} {title}")
@@ -43,14 +40,16 @@ def main():
         else:
             wrong.append((app, title, fresh_prediction, true_label))
 
-    print(f"--- RESULTS ---")
-    print(f"Tested against: {total} human-confirmed real entries")
-    print(f"Current model accuracy: {correct}/{total} ({round(100*correct/total, 1)}%)\n")
+    acc = round(100 * correct / total, 1)
+    print("--- RESULTS ---")
+    print(f"Tested: {total} human-labeled entries")
+    print(f"Accuracy: {correct}/{total} ({acc}%)\n")
 
     if wrong:
         print(f"Sample misclassifications ({min(10, len(wrong))} of {len(wrong)}):")
         for app, title, pred, actual in wrong[:10]:
             print(f"  [{app}] {title} — predicted {pred}, actual {actual}")
+
 
 if __name__ == "__main__":
     main()

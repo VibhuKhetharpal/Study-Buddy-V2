@@ -1,4 +1,5 @@
 export function dominantLabel(entries) {
+  if (!entries || entries.length === 0) return "empty";
   const labels = entries.map((e) => e.user_label || e.predicted_label);
   const study = labels.filter((l) => l === "study").length;
   const distract = labels.filter((l) => l === "distract").length;
@@ -26,18 +27,17 @@ export function groupLogs(rows) {
   }));
 }
 
-// backend stores timestamps as naive UTC ISO strings (no "Z" suffix), so
-// the JS Date constructor treats them as local time by mistake. appending
-// "Z" tells it explicitly "this is UTC", which then converts correctly
-// to the browser's local timezone when displayed.
-function parseUTC(iso) {
+export function parseUTC(iso) {
   if (!iso) return null;
-  return new Date(iso.endsWith("Z") ? iso : iso + "Z");
+  if (iso.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(iso)) {
+    return new Date(iso);
+  }
+  return new Date(iso + "Z");
 }
 
 export function fmtTime(iso) {
   const d = parseUTC(iso);
-  if (!d) return "—";
+  if (!d || isNaN(d.getTime())) return "—";
   return d.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -47,23 +47,26 @@ export function fmtTime(iso) {
 
 export function fmtDateTime(iso) {
   const d = parseUTC(iso);
-  if (!d) return "—";
+  if (!d || isNaN(d.getTime())) return "—";
   return d.toLocaleString();
 }
 
 export function duration(start, end) {
-  if (!start || !end) return "—";
-  const diff = Math.floor((new Date(end) - new Date(start)) / 1000);
+  const dStart = parseUTC(start);
+  const dEnd = parseUTC(end);
+  if (!dStart || !dEnd || isNaN(dStart.getTime()) || isNaN(dEnd.getTime())) return "—";
+  const diff = Math.max(0, Math.floor((dEnd - dStart) / 1000));
   const m = Math.floor(diff / 60);
   const s = diff % 60;
   return m > 0 ? `${m}m ${s}s` : `${s}s`;
 }
 
-// builds the heatbar: buckets all entries into N equal time-slices across
-// the session and returns the dominant label per slice, used by Heatbar.jsx
 export function buildHeatbar(rows, slices = 30) {
   if (!rows || rows.length === 0) return [];
-  const sorted = [...rows].sort(
+  const validRows = rows.filter((r) => r.timestamp && !isNaN(parseUTC(r.timestamp)?.getTime()));
+  if (validRows.length === 0) return [];
+
+  const sorted = [...validRows].sort(
     (a, b) => parseUTC(a.timestamp) - parseUTC(b.timestamp)
   );
   const start = parseUTC(sorted[0].timestamp).getTime();
@@ -73,10 +76,8 @@ export function buildHeatbar(rows, slices = 30) {
   const buckets = Array.from({ length: slices }, () => []);
   sorted.forEach((row) => {
     const t = parseUTC(row.timestamp).getTime();
-    const idx = Math.min(
-      slices - 1,
-      Math.floor(((t - start) / span) * slices)
-    );
+    const rawIdx = Math.floor(((t - start) / span) * slices);
+    const idx = Math.max(0, Math.min(slices - 1, isNaN(rawIdx) ? 0 : rawIdx));
     buckets[idx].push(row);
   });
 

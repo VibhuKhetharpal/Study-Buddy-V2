@@ -27,19 +27,31 @@ export default function Dashboard() {
 
   const refreshLogs = useCallback((sid) => {
     if (!sid) return;
-    getSessionLogs(sid).then(setRows);
+    getSessionLogs(sid)
+      .then((data) => {
+        if (Array.isArray(data)) setRows(data);
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
-    getStats().then(setStats);
-    getLatestSession().then((d) => {
-      if (d.session_id) {
-        setSessionId(d.session_id);
-        refreshLogs(d.session_id);
-      }
-    });
+    getStats()
+      .then((s) => s && !s.error && setStats(s))
+      .catch(() => {});
+
+    getLatestSession()
+      .then((d) => {
+        if (d && d.session_id) {
+          setSessionId(d.session_id);
+          refreshLogs(d.session_id);
+        }
+      })
+      .catch(() => {});
+
     const interval = setInterval(() => {
-      getStats().then(setStats);
+      getStats()
+        .then((s) => s && !s.error && setStats(s))
+        .catch(() => {});
     }, 5000);
     return () => clearInterval(interval);
   }, [refreshLogs]);
@@ -54,8 +66,14 @@ export default function Dashboard() {
     setRetraining(true);
     setRetrainMsg("retraining...");
     retrainModel()
-      .then((d) => setRetrainMsg(`done — ${d.user_labels_used} user labels used`))
-      .catch(() => setRetrainMsg("failed"))
+      .then((d) => {
+        if (d && d.error) {
+          setRetrainMsg(`failed: ${d.error}`);
+        } else {
+          setRetrainMsg(`done — ${d.user_labels_used ?? 0} user labels used`);
+        }
+      })
+      .catch(() => setRetrainMsg("failed to connect to backend"))
       .finally(() => setRetraining(false));
   };
 
@@ -64,7 +82,8 @@ export default function Dashboard() {
     setSummaryLoading(true);
     setSummary(null);
     getSummary(sessionId)
-      .then((d) => setSummary(d.summary || d.error))
+      .then((d) => setSummary(d.summary || d.error || "No summary available"))
+      .catch(() => setSummary("Failed to connect to backend for summary"))
       .finally(() => setSummaryLoading(false));
   };
 
@@ -96,7 +115,7 @@ export default function Dashboard() {
         <ActionButton onClick={handleSummary} disabled={!sessionId || summaryLoading} color="yellow">
           {summaryLoading ? "summarizing..." : "summarize session"}
         </ActionButton>
-        <span style={{ fontSize: "0.7rem", color: "#484f58" }}>{retrainMsg}</span>
+        <span style={{ fontSize: "0.7rem", color: "#8b949e" }}>{retrainMsg}</span>
       </div>
 
       {summary && (

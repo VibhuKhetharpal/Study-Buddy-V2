@@ -1,9 +1,9 @@
+import os
+import joblib
+import numpy as np
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.linear_model import LogisticRegression
-import joblib
-import numpy as np
-import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_DIR = os.path.join(BASE_DIR, os.environ.get("MODEL_SUBDIR", ""))
@@ -11,27 +11,33 @@ MODEL_PATH = os.path.join(MODEL_DIR, "model.pkl")
 EMBEDDINGS_PATH = os.path.join(MODEL_DIR, "train_embeddings.npy")
 LABELS_PATH = os.path.join(MODEL_DIR, "train_labels.npy")
 
-# loaded once at module import so retrain() and predict() reuse the same in-memory model instead of re-downloading/re-loading per call
 EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
 
 
 def train(data_path):
     df = pd.read_csv(data_path)
-    X = df['text'].tolist()
-    Y = df['label'].tolist()
+    x = df['text'].tolist()
+    y = df['label'].tolist()
 
-    embeddings = EMBED_MODEL.encode(X, show_progress_bar=True)
+    embeddings = EMBED_MODEL.encode(x, show_progress_bar=False)
 
     model = LogisticRegression(max_iter=1000)
-    model.fit(embeddings, Y)
+    model.fit(embeddings, y)
 
+    os.makedirs(MODEL_DIR, exist_ok=True)
     joblib.dump(model, MODEL_PATH)
     np.save(EMBEDDINGS_PATH, embeddings)
-    np.save(LABELS_PATH, np.array(Y))
+    np.save(LABELS_PATH, np.array(y))
+    return model
 
 
 def predict(text):
-    model = joblib.load(MODEL_PATH)
+    if not os.path.exists(MODEL_PATH):
+        data_path = os.path.join(BASE_DIR, "..", "data", "seed_data.csv")
+        model = train(data_path)
+    else:
+        model = joblib.load(MODEL_PATH)
+
     embedding = EMBED_MODEL.encode([text])
     return model.predict(embedding)[0]
 
@@ -40,6 +46,9 @@ def retrain(data_path):
     import sys
     sys.path.append(os.path.join(BASE_DIR, '..', 'backend'))
     from db import get_labelled_data
+
+    if not os.path.exists(EMBEDDINGS_PATH) or not os.path.exists(LABELS_PATH):
+        train(data_path)
 
     seed_embeddings = np.load(EMBEDDINGS_PATH)
     seed_labels = np.load(LABELS_PATH)

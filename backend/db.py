@@ -5,12 +5,16 @@ from datetime import datetime, timezone
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_NAME = os.path.join(BASE_DIR, os.environ.get("DB_FILENAME", "database.db"))
 
+
 def get_connection():
-    return sqlite3.connect(DB_NAME)
-def insert_activity(session_id, app_name, window_title,predicted_label):
+    conn = sqlite3.connect(DB_NAME, timeout=20)
+    conn.execute("PRAGMA journal_mode=WAL")
+    return conn
+
+
+def insert_activity(session_id, app_name, window_title, predicted_label):
     conn = get_connection()
     cur = conn.cursor()
-
     cur.execute("""
         INSERT INTO activity_logs (
             session_id,
@@ -22,41 +26,58 @@ def insert_activity(session_id, app_name, window_title,predicted_label):
         VALUES (?, ?, ?, ?, ?)
     """, (
         session_id,
-        datetime.utcnow().isoformat(),
+        datetime.now(timezone.utc).isoformat(),
         window_title,
         app_name,
         predicted_label
     ))
-
     conn.commit()
     conn.close()
 
+
 def update_user_label(log_id, user_label):
     conn = get_connection()
-    
-    # get the window_title and session_id of this log
     row = conn.execute(
         "SELECT window_title, session_id FROM activity_logs WHERE id=?",
         (log_id,)
     ).fetchone()
-    
+
     if row:
         window_title, session_id = row
-        # update ALL rows with same window_title in same session
         conn.execute("""
             UPDATE activity_logs 
             SET user_label=?
             WHERE window_title=? AND session_id=?
         """, (user_label, window_title, session_id))
-    
+
     conn.commit()
     conn.close()
 
+
+def bulk_label_window(session_id, window_title, user_label):
+    conn = get_connection()
+    conn.execute("""
+        UPDATE activity_logs
+        SET user_label=?
+        WHERE session_id=? AND window_title=?
+    """, (user_label, session_id, window_title))
+    conn.commit()
+    conn.close()
+
+
 def get_labelled_data():
     conn = get_connection()
-    rows = conn.execute(
-        "SELECT window_title, user_label FROM activity_logs WHERE user_label IS NOT NULL"
-    ).fetchall()
+    rows = conn.execute("""
+        SELECT 
+            CASE 
+                WHEN app_name IS NOT NULL AND app_name != '' 
+                THEN app_name || ' ' || window_title 
+                ELSE window_title 
+            END,
+            user_label 
+        FROM activity_logs 
+        WHERE user_label IS NOT NULL
+    """).fetchall()
     conn.close()
     return [{"text": row[0], "label": row[1]} for row in rows]
 
@@ -87,27 +108,25 @@ def create_tables():
     )
     """)
 
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_logs_session ON activity_logs(session_id)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_logs_user_label ON activity_logs(user_label)")
+
     conn.commit()
     conn.close()
 
-if __name__ == "__main__":
-    create_tables()
-    print("DB Ready")
+
 def create_session():
     conn = get_connection()
     cur = conn.cursor()
-
     cur.execute("""
         INSERT INTO sessions (start_time)
         VALUES (?)
     """, (datetime.now(timezone.utc).isoformat(),))
-
     session_id = cur.lastrowid
-
     conn.commit()
     conn.close()
-
     return session_id
+
 
 def end_session(session_id):
     conn = get_connection()
@@ -118,24 +137,24 @@ def end_session(session_id):
     conn.commit()
 
     study = conn.execute(
-        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND predicted_label='study'",
+        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND COALESCE(user_label, predicted_label)='study'",
         (session_id,)
     ).fetchone()[0]
     distract = conn.execute(
-        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND predicted_label='distract'",
+        "SELECT COUNT(*) FROM activity_logs WHERE session_id=? AND COALESCE(user_label, predicted_label)='distract'",
         (session_id,)
     ).fetchone()[0]
     conn.close()
     return {"study": study, "distract": distract}
-create_tables()
+
 
 def get_stats():
     conn = get_connection()
     conn.row_factory = sqlite3.Row
-    
+
     total = conn.execute("SELECT COUNT(*) FROM activity_logs").fetchone()[0]
-    study = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE predicted_label='study'").fetchone()[0]
-    distract = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE predicted_label='distract'").fetchone()[0]
+    study = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE COALESCE(user_label, predicted_label)='study'").fetchone()[0]
+    distract = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE COALESCE(user_label, predicted_label)='distract'").fetchone()[0]
     corrected = conn.execute("SELECT COUNT(*) FROM activity_logs WHERE user_label IS NOT NULL").fetchone()[0]
     mistakes = conn.execute(
         "SELECT COUNT(*) FROM activity_logs WHERE user_label IS NOT NULL AND user_label != predicted_label"
@@ -154,6 +173,7 @@ def get_stats():
         "recent": [dict(r) for r in recent]
     }
 
+
 def get_sessions():
     conn = get_connection()
     conn.row_factory = sqlite3.Row
@@ -163,8 +183,8 @@ def get_sessions():
             s.start_time,
             s.end_time,
             COUNT(a.id) as total,
-            SUM(CASE WHEN a.predicted_label='study' THEN 1 ELSE 0 END) as study,
-            SUM(CASE WHEN a.predicted_label='distract' THEN 1 ELSE 0 END) as distract
+            SUM(CASE WHEN COALESCE(a.user_label, a.predicted_label)='study' THEN 1 ELSE 0 END) as study,
+            SUM(CASE WHEN COALESCE(a.user_label, a.predicted_label)='distract' THEN 1 ELSE 0 END) as distract
         FROM sessions s
         LEFT JOIN activity_logs a ON a.session_id = s.id
         GROUP BY s.id
@@ -173,33 +193,25 @@ def get_sessions():
     conn.close()
     return [dict(s) for s in sessions]
 
+
 def get_session_logs(session_id):
     conn = get_connection()
     conn.row_factory = sqlite3.Row
     rows = conn.execute("""
         SELECT id, app_name, window_title, predicted_label, user_label, timestamp
         FROM activity_logs 
-        WHERE session_id=? AND predicted_label IS NOT NULL
+        WHERE session_id=? AND (predicted_label IS NOT NULL OR user_label IS NOT NULL)
         ORDER BY id ASC
     """, (session_id,)).fetchall()
     conn.close()
     return [dict(r) for r in rows]
+
 
 def get_latest_session_id():
     conn = get_connection()
     row = conn.execute("SELECT id FROM sessions ORDER BY id DESC LIMIT 1").fetchone()
     conn.close()
     return row[0] if row else None
-
-def bulk_label_window(session_id, window_title, user_label):
-    conn = get_connection()
-    conn.execute("""
-        UPDATE activity_logs
-        SET user_label=?
-        WHERE session_id=? AND window_title=?
-    """, (user_label, session_id, window_title))
-    conn.commit()
-    conn.close()
 
 
 def get_session_window_titles(session_id):
@@ -210,3 +222,9 @@ def get_session_window_titles(session_id):
     ).fetchall()
     conn.close()
     return [{"app_name": r[0], "window_title": r[1]} for r in rows]
+
+
+create_tables()
+
+if __name__ == "__main__":
+    print("DB Ready")

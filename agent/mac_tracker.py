@@ -1,13 +1,3 @@
-# mac_tracker.py
-# Tracks active window/tab titles on macOS using a multi-layer strategy:
-# 1. Zero-permission frontmost app detection (lsappinfo)
-# 2. Direct browser tab queries for Chrome, Safari, Arc, Brave, Edge
-# 3. System Events accessibility query for desktop apps (VS Code, Slack, etc.)
-# 4. Automatic app-name fallback so tracking never stalls on empty titles
-#
-# Triggers a desktop notification after DISTRACT_THRESHOLD_SECONDS of
-# continuous distraction, with NOTIFY_COOLDOWN_SECONDS between alerts.
-
 import os
 import re
 import sys
@@ -26,6 +16,15 @@ SERVER = os.environ.get("STUDY_BUDDY_SERVER", "http://127.0.0.1:5000")
 DISTRACT_THRESHOLD_SECONDS = 30
 NOTIFY_COOLDOWN_SECONDS = 30
 
+BROWSER_SCRIPTS = {
+    "Google Chrome": 'tell application "Google Chrome" to if (count of windows) > 0 then return title of active tab of front window',
+    "Safari": 'tell application "Safari" to if (count of windows) > 0 then return name of current tab of front window',
+    "Arc": 'tell application "Arc" to if (count of windows) > 0 then return title of active tab of front window',
+    "Brave Browser": 'tell application "Brave Browser" to if (count of windows) > 0 then return title of active tab of front window',
+    "Microsoft Edge": 'tell application "Microsoft Edge" to if (count of windows) > 0 then return title of active tab of front window',
+}
+
+
 def _http_get_json(url, timeout=2):
     if requests:
         r = requests.get(url, timeout=timeout)
@@ -33,6 +32,7 @@ def _http_get_json(url, timeout=2):
     req = urllib.request.Request(url)
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.status, json.loads(resp.read().decode("utf-8"))
+
 
 def _http_post_json(url, payload=None, timeout=2):
     if requests:
@@ -43,20 +43,8 @@ def _http_post_json(url, payload=None, timeout=2):
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.status, json.loads(resp.read().decode("utf-8"))
 
-BROWSER_SCRIPTS = {
-    "Google Chrome": 'tell application "Google Chrome" to if (count of windows) > 0 then return title of active tab of front window',
-    "Safari": 'tell application "Safari" to if (count of windows) > 0 then return name of current tab of front window',
-    "Arc": 'tell application "Arc" to if (count of windows) > 0 then return title of active tab of front window',
-    "Brave Browser": 'tell application "Brave Browser" to if (count of windows) > 0 then return title of active tab of front window',
-    "Microsoft Edge": 'tell application "Microsoft Edge" to if (count of windows) > 0 then return title of active tab of front window',
-}
-
 
 def get_frontmost_app():
-    """Returns the name of the frontmost application.
-    First tries lsappinfo (built into macOS, requires 0 privacy permissions),
-    then falls back to System Events."""
-    # Method 1: lsappinfo (fast, zero permissions required)
     try:
         res = subprocess.run(['lsappinfo', 'front'], capture_output=True, text=True, timeout=1)
         if res.returncode == 0 and res.stdout.strip():
@@ -71,7 +59,6 @@ def get_frontmost_app():
     except Exception:
         pass
 
-    # Method 2: System Events via osascript
     try:
         script = 'tell application "System Events" to get name of first application process whose frontmost is true'
         res = subprocess.run(['osascript', '-e', script], capture_output=True, text=True, timeout=2)
@@ -84,14 +71,9 @@ def get_frontmost_app():
 
 
 def get_window_or_tab_title(app_name):
-    """Retrieves the active window or tab title for the frontmost application.
-    1. For known browsers: asks the browser directly for the active tab title.
-    2. For other applications: asks System Events for window 1 title.
-    3. Fallback: returns app_name if no title is available."""
     if not app_name or app_name == "Unknown":
         return "", None
 
-    # 1. Direct browser tab query
     if app_name in BROWSER_SCRIPTS:
         try:
             res = subprocess.run(['osascript', '-e', BROWSER_SCRIPTS[app_name]], capture_output=True, text=True, timeout=2)
@@ -100,8 +82,6 @@ def get_window_or_tab_title(app_name):
         except Exception:
             pass
 
-    # 2. Desktop applications: query System Events for window 1
-    # Escape quotes in app name to prevent AppleScript syntax errors
     escaped_app = app_name.replace('"', '\\"')
     generic_script = f'''
     tell application "System Events"
@@ -122,12 +102,10 @@ def get_window_or_tab_title(app_name):
     except Exception as e:
         err = str(e)
 
-    # 3. Fallback: return app_name so logs are never dropped
     return app_name, err
 
 
 def get_active_window():
-    """Returns (title, app, error). Never returns empty app or title."""
     app = get_frontmost_app()
     title, err = get_window_or_tab_title(app)
     if not title:
@@ -136,8 +114,6 @@ def get_active_window():
 
 
 def check_permissions():
-    """Checks whether System Events / AppleScript is allowed, and prints clear
-    actionable guidance if permissions are missing."""
     test_script = 'tell application "System Events" to get name of first application process whose frontmost is true'
     try:
         result = subprocess.run(['osascript', '-e', test_script], capture_output=True, text=True, timeout=2)
@@ -145,16 +121,12 @@ def check_permissions():
             err = result.stderr.strip()
             low = err.lower()
             if any(k in low for k in ["not allowed", "assistive access", "-1743", "not authorized"]):
-                print("\n" + "=" * 64)
-                print("STUDY BUDDY PERMISSION NOTICE (macOS):")
-                print("macOS is restricting accessibility/automation for this terminal.")
-                print("To unlock full window-title inspection:")
-                print("  1. Open System Settings > Privacy & Security > Accessibility")
-                print("     -> Turn ON the toggle for your terminal (Terminal, iTerm, VS Code).")
-                print("  2. Open System Settings > Privacy & Security > Automation")
-                print("     -> Expand your terminal and check 'System Events'.")
-                print("  (Note: Study Buddy will still track active apps using its fallback system!)")
-                print("=" * 64 + "\n")
+                print("\n" + "=" * 60)
+                print("Permission check: accessibility or automation blocked.")
+                print("Fix in macOS System Settings > Privacy & Security:")
+                print("  - Accessibility -> enable your terminal / IDE")
+                print("  - Automation -> enable System Events under your terminal")
+                print("=" * 60 + "\n")
                 return False
     except Exception:
         pass
@@ -204,30 +176,21 @@ def send_log(session_id, app_name, window_title):
 
 
 def run_diagnostics():
-    print("\n" + "=" * 50)
-    print("      STUDY BUDDY — MAC TRACKER DIAGNOSTICS")
-    print("=" * 50)
-    
-    # 1. App & Window Detection
     app = get_frontmost_app()
     title, err = get_window_or_tab_title(app)
-    print(f"• Frontmost App:       {app}")
-    print(f"• Window / Tab Title:  {title}")
+    print(f"App: {app}")
+    print(f"Title: {title}")
     if err:
-        print(f"• System Events Note:  {err}")
+        print(f"Error: {err}")
 
-    # 2. Permissions Check
     has_perm = check_permissions()
-    print(f"• Permissions:         {'✓ Granted' if has_perm else '⚠ Needs Permission (Fallback Active)'}")
+    print(f"Permissions: {'OK' if has_perm else 'Restricted'}")
 
-    # 3. Backend Connection
     try:
         status, _ = _http_get_json(f"{SERVER}/latest_session", timeout=2)
-        print(f"• Backend ({SERVER}): ✓ Connected (Status {status})")
+        print(f"Backend ({SERVER}): HTTP {status}")
     except Exception:
-        print(f"• Backend ({SERVER}): ✗ Not running! Run 'python backend/app.py' first.")
-    
-    print("=" * 50 + "\n")
+        print(f"Backend ({SERVER}): Not reachable")
 
 
 if __name__ == "__main__":
@@ -237,12 +200,10 @@ if __name__ == "__main__":
 
     session_id = start_session()
     if session_id is None:
-        print(f"Failed to start session. Make sure backend is running on {SERVER}.")
+        print(f"Failed to connect to backend at {SERVER}")
         sys.exit(1)
 
-    print(f"Study Buddy started session #{session_id}")
-    print("Tracking active windows... (Press Ctrl+C to stop)\n")
-
+    print(f"Session #{session_id} started")
     check_permissions()
 
     last_title = None
@@ -255,7 +216,6 @@ if __name__ == "__main__":
         while True:
             title, app, _ = get_active_window()
 
-            # Trigger log when either the window title or application changes
             if title != last_title or app != last_app:
                 last_title = title
                 last_app = app
