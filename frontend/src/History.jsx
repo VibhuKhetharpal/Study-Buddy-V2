@@ -142,11 +142,18 @@ function Stat({ label, value, color }) {
 
 export default function History() {
   const [sessions, setSessions] = useState(null);
+  const [backendError, setBackendError] = useState(false);
 
   const loadSessions = () => {
     getSessions()
-      .then((data) => setSessions(Array.isArray(data) ? data : []))
-      .catch(() => setSessions([]));
+      .then((data) => {
+        setBackendError(false);
+        setSessions(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        setBackendError(true);
+        setSessions([]);
+      });
   };
 
   useEffect(() => {
@@ -163,14 +170,28 @@ export default function History() {
         <h1 style={{ fontSize: "1.2rem", fontWeight: 500, color: "#7ee787", letterSpacing: "0.05em", margin: 0 }}>
           study_buddy / history
         </h1>
-        <span style={{ fontSize: "0.75rem", color: "#8b949e" }}>
-          {sessions ? `${sessions.length} sessions logged` : ""}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <span style={{ fontSize: "0.75rem", color: "#8b949e" }}>
+            {sessions ? `${sessions.length} sessions logged` : ""}
+          </span>
+          <button
+            onClick={loadSessions}
+            style={{ background: "transparent", border: "1px solid #30363d", borderRadius: 5, color: "#8b949e", fontSize: "0.7rem", padding: "3px 10px", cursor: "pointer", fontFamily: "inherit" }}
+          >
+            refresh
+          </button>
+        </div>
       </div>
+
+      {backendError && (
+        <div style={{ background: "#3a1a1a", border: "1px solid #6e2a2a", borderRadius: 6, padding: "0.6rem 1rem", marginBottom: "1.5rem", fontSize: "0.75rem", color: "#f85149" }}>
+          ✗ Cannot reach backend at localhost:5000. Make sure Flask is running.
+        </div>
+      )}
 
       {sessions === null ? (
         <div style={{ color: "#484f58", fontSize: "0.8rem" }}>loading...</div>
-      ) : sessions.length === 0 ? (
+      ) : sessions.length === 0 && !backendError ? (
         <div style={{ color: "#484f58", fontSize: "0.8rem", padding: "2rem 0" }}>no sessions yet</div>
       ) : (
         sessions.map((s) => (

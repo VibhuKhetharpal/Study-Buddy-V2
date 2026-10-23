@@ -21,10 +21,18 @@ export default function Analytics() {
   const [sessions, setSessions] = useState([]);
   const [retraining, setRetraining] = useState(false);
   const [retrainMsg, setRetrainMsg] = useState("");
+  const [backendError, setBackendError] = useState(false);
 
   useEffect(() => {
-    getStats().then((d) => d && !d.error && setStats(d)).catch(() => {});
-    getSessions().then((d) => Array.isArray(d) && setSessions(d)).catch(() => {});
+    getStats()
+      .then((d) => {
+        setBackendError(false);
+        if (d && !d.error) setStats(d);
+      })
+      .catch(() => setBackendError(true));
+    getSessions()
+      .then((d) => Array.isArray(d) && setSessions(d))
+      .catch(() => {});
   }, []);
 
   const handleRetrain = () => {

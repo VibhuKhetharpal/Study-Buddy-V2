@@ -16,6 +16,7 @@ from db import (
     get_sessions,
     get_session_logs,
     get_latest_session_id,
+    get_latest_session,
     bulk_label_window,
     get_session_window_titles,
     delete_session,
@@ -42,7 +43,7 @@ def stop_session():
     data = request.json or {}
     session_id = data.get("session_id")
     if session_id is None:
-        session_id = get_latest_session_id()
+        session_id, _ = get_latest_session_id()
     if session_id is None:
         return jsonify({"error": "no active session"}), 400
 
@@ -149,8 +150,10 @@ def remove_log(log_id):
 
 @app.route("/latest_session")
 def latest_session():
-    sid = get_latest_session_id()
-    return jsonify({"session_id": sid})
+    s = get_latest_session()
+    if s is None:
+        return jsonify({"session_id": None, "start_time": None})
+    return jsonify(s)
 
 
 @app.route("/summary/<int:session_id>", methods=["GET"])

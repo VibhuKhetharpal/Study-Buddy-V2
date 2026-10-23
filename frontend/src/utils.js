@@ -59,11 +59,9 @@ export function groupRowsByHour(rows) {
     map[key].entries.push(row);
   });
 
-  // Sort hours newest first
   const sorted = Object.values(map).sort((a, b) => b.startHour - a.startHour);
 
   return sorted.map((g, idx) => {
-    // Within each hour, newest switches on top
     const entries = [...g.entries].sort(
       (a, b) => parseUTC(b.timestamp) - parseUTC(a.timestamp)
     );
@@ -127,8 +125,8 @@ export function duration(start, end) {
   return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
-// Builds a continuous timeline by forward-filling the active state across the session
-export function buildHeatbar(rows, slices = 40) {
+// Builds high-resolution timeline slices with exact time ranges and active tasks
+export function buildHeatbar(rows, slices = 80) {
   if (!rows || rows.length === 0) return [];
   const validRows = rows.filter((r) => r.timestamp && !isNaN(parseUTC(r.timestamp)?.getTime()));
   if (validRows.length === 0) return [];
@@ -141,22 +139,38 @@ export function buildHeatbar(rows, slices = 40) {
   const span = Math.max(end - start, 1);
   const bucketSpan = span / slices;
 
+  const fmt = (d) =>
+    d.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+
   const buckets = [];
   for (let i = 0; i < slices; i++) {
-    const bucketTime = start + (i + 0.5) * bucketSpan;
+    const bucketStart = new Date(start + i * bucketSpan);
+    const bucketEnd = new Date(start + (i + 1) * bucketSpan);
+    const bucketMid = start + (i + 0.5) * bucketSpan;
+
     let active = null;
     for (let j = 0; j < sorted.length; j++) {
       const t = parseUTC(sorted[j].timestamp).getTime();
-      if (t <= bucketTime) {
+      if (t <= bucketMid) {
         active = sorted[j];
       } else {
         break;
       }
     }
-    const label = active
-      ? (active.user_label || active.predicted_label)
-      : (sorted[0].user_label || sorted[0].predicted_label);
-    buckets.push(label || "study");
+    if (!active) active = sorted[0];
+
+    const label = active.user_label || active.predicted_label || "study";
+
+    buckets.push({
+      idx: i,
+      label,
+      timeLabel: `${fmt(bucketStart)} – ${fmt(bucketEnd)}`,
+      appName: active.app_name || "Unknown",
+      windowTitle: active.window_title || "",
+    });
   }
 
   return buckets;

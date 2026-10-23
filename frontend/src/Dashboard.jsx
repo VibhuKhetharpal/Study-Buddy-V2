@@ -3,7 +3,7 @@ import Heatbar from "./components/Heatbar.jsx";
 import HourlyActivity from "./components/HourlyActivity.jsx";
 import LogTree from "./components/LogTree.jsx";
 import ActionButton from "./components/ActionButton.jsx";
-import { getLatestSession, getSessionLogs, getSummary, stopSession } from "./api.js";
+import { getLatestSession, getSessionLogs, getSummary, stopSession, startSession } from "./api.js";
 import { buildHeatbar, fmtTime, duration } from "./utils.js";
 
 function StatCard({ label, value, color, subtitle }) {
@@ -22,13 +22,23 @@ function StatCard({ label, value, color, subtitle }) {
 
 export default function Dashboard() {
   const [sessionId, setSessionId] = useState(null);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
   const [rows, setRows] = useState([]);
   const [summary, setSummary] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [stopping, setStopping] = useState(false);
+  const [starting, setStarting] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
   const [showHeatbar, setShowHeatbar] = useState(true);
-  const [activityView, setActivityView] = useState("hourly"); // "hourly" or "tree"
+  const [activityView, setActivityView] = useState("hourly");
+  const [backendError, setBackendError] = useState(false);
+  const [now, setNow] = useState(Date.now());
+
+  // Live clock so duration updates every second without a network call
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
 
   const refreshLogs = useCallback((sid) => {
     if (!sid) return;
@@ -42,12 +52,18 @@ export default function Dashboard() {
   const loadLatest = useCallback(() => {
     getLatestSession()
       .then((d) => {
+        setBackendError(false);
         if (d && d.session_id) {
           setSessionId(d.session_id);
+          setSessionStartTime(d.start_time || null);
           refreshLogs(d.session_id);
+        } else {
+          setSessionId(null);
+          setSessionStartTime(null);
+          setRows([]);
         }
       })
-      .catch(() => {});
+      .catch(() => setBackendError(true));
   }, [refreshLogs]);
 
   useEffect(() => {
@@ -75,6 +91,25 @@ export default function Dashboard() {
       .finally(() => setStopping(false));
   };
 
+  const handleStart = () => {
+    setStarting(true);
+    startSession()
+      .then((d) => {
+        if (d && d.session_id) {
+          setSessionId(d.session_id);
+          setSessionStartTime(null);
+          setRows([]);
+          setSummary(null);
+          setStatusMsg(`Session #${d.session_id} created — now run the tracker.`);
+          loadLatest();
+        } else {
+          setStatusMsg("Failed to start session.");
+        }
+      })
+      .catch(() => setStatusMsg("Failed to connect to backend."))
+      .finally(() => setStarting(false));
+  };
+
   const handleSummary = () => {
     if (!sessionId) return;
     setSummaryLoading(true);
@@ -85,14 +120,32 @@ export default function Dashboard() {
       .finally(() => setSummaryLoading(false));
   };
 
-  // Compute session-specific metrics strictly from this session's rows
   const totalLogs = rows.length;
   const studyCount = rows.filter((r) => (r.user_label || r.predicted_label) === "study").length;
   const distractCount = rows.filter((r) => (r.user_label || r.predicted_label) === "distract").length;
   const focusPct = totalLogs > 0 ? Math.round((studyCount / totalLogs) * 100) : 0;
   const focusColor = focusPct >= 75 ? "#7ee787" : focusPct >= 50 ? "#e3b341" : "#f85149";
 
-  const sessionDuration = rows.length > 1 ? duration(rows[0].timestamp, rows[rows.length - 1].timestamp) : "—";
+  // Use session start_time from the DB + live clock for accurate elapsed time.
+  // Falls back to first/last log entry if start_time isn't available yet.
+  const sessionDuration = (() => {
+    if (sessionStartTime) {
+      const start = new Date(sessionStartTime.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(sessionStartTime)
+        ? sessionStartTime
+        : sessionStartTime + "Z");
+      if (!isNaN(start.getTime())) {
+        const diffSec = Math.max(0, Math.floor((now - start.getTime()) / 1000));
+        const totalM = Math.floor(diffSec / 60);
+        const s = diffSec % 60;
+        if (totalM < 60) return totalM > 0 ? (s > 0 ? `${totalM}m ${s}s` : `${totalM}m`) : `${s}s`;
+        const h = Math.floor(totalM / 60);
+        const m = totalM % 60;
+        return m > 0 ? `${h}h ${m}m` : `${h}h`;
+      }
+    }
+    return rows.length > 1 ? duration(rows[0].timestamp, rows[rows.length - 1].timestamp) : "—";
+  })();
+
   const lastEntry = rows.length > 0 ? rows[rows.length - 1] : null;
   const lastLabel = lastEntry ? lastEntry.user_label || lastEntry.predicted_label : null;
 
@@ -111,20 +164,37 @@ export default function Dashboard() {
         </div>
 
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-          <ActionButton onClick={handleSummary} disabled={!sessionId || totalLogs === 0 || summaryLoading} color="yellow">
-            {summaryLoading ? "summarizing..." : "summarize session"}
-          </ActionButton>
-          <ActionButton onClick={handleStop} disabled={!sessionId || stopping} color="red">
-            {stopping ? "stopping..." : "end session"}
-          </ActionButton>
+          {!sessionId && (
+            <ActionButton onClick={handleStart} disabled={starting} color="green">
+              {starting ? "starting..." : "start session"}
+            </ActionButton>
+          )}
+          {sessionId && (
+            <>
+              <ActionButton onClick={handleSummary} disabled={totalLogs === 0 || summaryLoading} color="yellow">
+                {summaryLoading ? "summarizing..." : "summarize session"}
+              </ActionButton>
+              <ActionButton onClick={handleStop} disabled={stopping} color="red">
+                {stopping ? "stopping..." : "end session"}
+              </ActionButton>
+            </>
+          )}
         </div>
       </div>
 
-      {statusMsg && (
-        <div style={{ background: "#161b22", border: "1px solid #30363d", borderRadius: 6, padding: "0.5rem 1rem", marginBottom: "1rem", fontSize: "0.75rem", color: "#e3b341" }}>
-          {statusMsg}
+      {backendError && (
+        <div style={{ background: "#3a1a1a", border: "1px solid #6e2a2a", borderRadius: 6, padding: "0.6rem 1rem", marginBottom: "1rem", fontSize: "0.75rem", color: "#f85149" }}>
+          ✗ Cannot reach backend at localhost:5000. Make sure Flask is running: <code>python backend/app.py</code>
         </div>
       )}
+
+      {statusMsg && (
+        <div style={{ background: "#161b22", border: "1px solid #30363d", borderRadius: 6, padding: "0.5rem 1rem", marginBottom: "1rem", fontSize: "0.75rem", color: "#e3b341", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{statusMsg}</span>
+          <button onClick={() => setStatusMsg("")} style={{ background: "transparent", border: "none", color: "#484f58", cursor: "pointer", fontSize: "0.7rem" }}>✕</button>
+        </div>
+      )}
+
 
       {/* Active task banner */}
       <div

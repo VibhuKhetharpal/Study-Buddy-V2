@@ -58,6 +58,11 @@ export async function deleteLog(logId) {
   return r.json();
 }
 
+export async function startSession() {
+  const r = await fetch(`${BASE}/start`, { method: "POST" });
+  return r.json();
+}
+
 export async function stopSession(sessionId) {
   const r = await fetch(`${BASE}/stop`, {
     method: "POST",

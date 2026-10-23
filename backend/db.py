@@ -209,9 +209,22 @@ def get_session_logs(session_id):
 
 def get_latest_session_id():
     conn = get_connection()
-    row = conn.execute("SELECT id FROM sessions ORDER BY id DESC LIMIT 1").fetchone()
+    row = conn.execute(
+        "SELECT id, start_time FROM sessions WHERE end_time IS NULL ORDER BY id DESC LIMIT 1"
+    ).fetchone()
     conn.close()
-    return row[0] if row else None
+    return (row[0], row[1]) if row else (None, None)
+
+
+def get_latest_session():
+    conn = get_connection()
+    row = conn.execute(
+        "SELECT id, start_time FROM sessions WHERE end_time IS NULL ORDER BY id DESC LIMIT 1"
+    ).fetchone()
+    conn.close()
+    if not row:
+        return None
+    return {"session_id": row[0], "start_time": row[1]}
 
 
 def get_session_window_titles(session_id):
