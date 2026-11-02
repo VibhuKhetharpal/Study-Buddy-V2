@@ -47,7 +47,7 @@ export default function Analytics() {
           getStats().then((s) => s && !s.error && setStats(s)).catch(() => {});
         }
       })
-      .catch(() => setRetrainMsg("Failed to connect to backend"))
+      .catch((err) => setRetrainMsg(`Failed: ${err.message || "Failed to connect to backend"}`))
       .finally(() => setRetraining(false));
   };
 
@@ -69,6 +69,12 @@ export default function Analytics() {
           </p>
         </div>
       </div>
+
+      {backendError && (
+        <div style={{ background: "#3a1a1a", border: "1px solid #6e2a2a", borderRadius: 6, padding: "0.6rem 1rem", marginBottom: "1.5rem", fontSize: "0.75rem", color: "#f85149" }}>
+          ✗ Cannot reach backend at localhost:5000. Make sure Flask is running.
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
         <StatCard label="Overall Focus" value={`${overallFocus}%`} color="#7ee787" subtitle={`${studyLogs} study vs ${distractLogs} distract`} />

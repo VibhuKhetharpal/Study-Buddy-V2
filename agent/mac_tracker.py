@@ -6,6 +6,8 @@ import json
 import subprocess
 import urllib.request
 import urllib.error
+import signal
+import atexit
 
 try:
     import requests
@@ -169,6 +171,16 @@ def notify(message, with_sound=False):
         pass
 
 
+def get_active_session():
+    try:
+        status, data = _http_get_json(f"{SERVER}/latest_session", timeout=2)
+        if status == 200 and data and data.get("session_id"):
+            return data.get("session_id")
+    except Exception:
+        pass
+    return None
+
+
 def start_session():
     try:
         status, data = _http_post_json(f"{SERVER}/start", timeout=3)
@@ -224,13 +236,31 @@ if __name__ == "__main__":
         run_diagnostics()
         sys.exit(0)
 
-    session_id = start_session()
-    if session_id is None:
-        print(f"Failed to connect to backend at {SERVER}")
-        sys.exit(1)
+    session_id = get_active_session()
+    if session_id:
+        print(f"Attached to active Session #{session_id}")
+    else:
+        session_id = start_session()
+        if session_id is None:
+            print(f"Failed to connect to backend at {SERVER}")
+            sys.exit(1)
+        print(f"Session #{session_id} started")
 
-    print(f"Session #{session_id} started")
     check_permissions()
+
+    _session_stopped = False
+
+    def handle_exit(signum=None, frame=None):
+        nonlocal _session_stopped
+        if not _session_stopped and session_id:
+            _session_stopped = True
+            stop_session(session_id)
+            print(f"\nSession #{session_id} stopped.")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT, handle_exit)
+    signal.signal(signal.SIGTERM, handle_exit)
+    atexit.register(lambda: handle_exit() if not _session_stopped else None)
 
     last_title = None
     last_app = None
@@ -242,8 +272,14 @@ if __name__ == "__main__":
         while True:
             title, app, _ = get_active_window()
 
-            # Ignore self when switching to dashboard
-            if not is_dashboard_window(title, app):
+            # Ignore self when switching to dashboard and pause distraction alerts
+            if is_dashboard_window(title, app):
+                distract_start = None
+                notified_milestones.clear()
+                current_label = None
+                last_title = None
+                last_app = None
+            else:
                 if title != last_title or app != last_app:
                     last_title = title
                     last_app = app
@@ -281,6 +317,5 @@ if __name__ == "__main__":
                 notified_milestones.clear()
 
             time.sleep(2)
-    except KeyboardInterrupt:
-        stop_session(session_id)
-        print(f"\nSession #{session_id} stopped.")
+    except (KeyboardInterrupt, SystemExit):
+        handle_exit()

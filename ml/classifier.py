@@ -12,9 +12,11 @@ EMBEDDINGS_PATH = os.path.join(MODEL_DIR, "train_embeddings.npy")
 LABELS_PATH = os.path.join(MODEL_DIR, "train_labels.npy")
 
 EMBED_MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+_CACHED_MODEL = None
 
 
 def train(data_path):
+    global _CACHED_MODEL
     df = pd.read_csv(data_path)
     x = df['text'].tolist()
     y = df['label'].tolist()
@@ -28,21 +30,25 @@ def train(data_path):
     joblib.dump(model, MODEL_PATH)
     np.save(EMBEDDINGS_PATH, embeddings)
     np.save(LABELS_PATH, np.array(y))
+    _CACHED_MODEL = model
     return model
 
 
 def predict(text):
-    if not os.path.exists(MODEL_PATH):
-        data_path = os.path.join(BASE_DIR, "..", "data", "seed_data.csv")
-        model = train(data_path)
-    else:
-        model = joblib.load(MODEL_PATH)
+    global _CACHED_MODEL
+    if _CACHED_MODEL is None:
+        if not os.path.exists(MODEL_PATH):
+            data_path = os.path.join(BASE_DIR, "..", "data", "seed_data.csv")
+            _CACHED_MODEL = train(data_path)
+        else:
+            _CACHED_MODEL = joblib.load(MODEL_PATH)
 
     embedding = EMBED_MODEL.encode([text])
-    return model.predict(embedding)[0]
+    return _CACHED_MODEL.predict(embedding)[0]
 
 
 def retrain(data_path):
+    global _CACHED_MODEL
     import sys
     sys.path.append(os.path.join(BASE_DIR, '..', 'backend'))
     from db import get_labelled_data
@@ -69,6 +75,7 @@ def retrain(data_path):
     model = LogisticRegression(max_iter=1000)
     model.fit(all_embeddings, all_labels)
     joblib.dump(model, MODEL_PATH)
+    _CACHED_MODEL = model
 
     return len(user_data) if user_data else 0
 

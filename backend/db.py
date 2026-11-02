@@ -9,7 +9,49 @@ DB_NAME = os.path.join(BASE_DIR, os.environ.get("DB_FILENAME", "database.db"))
 def get_connection():
     conn = sqlite3.connect(DB_NAME, timeout=20)
     conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA foreign_keys = ON")
     return conn
+
+
+def close_stale_sessions(conn=None):
+    close_at_end = False
+    if conn is None:
+        conn = get_connection()
+        close_at_end = True
+
+    unclosed = conn.execute("SELECT id, start_time FROM sessions WHERE end_time IS NULL").fetchall()
+    now_utc = datetime.now(timezone.utc)
+
+    for sid, start_time in unclosed:
+        last_log = conn.execute(
+            "SELECT timestamp FROM activity_logs WHERE session_id=? ORDER BY id DESC LIMIT 1",
+            (sid,)
+        ).fetchone()
+
+        last_time_str = last_log[0] if last_log and last_log[0] else start_time
+        should_close = False
+        try:
+            ts_str = last_time_str
+            if ts_str.endswith("Z"):
+                ts_str = ts_str[:-1] + "+00:00"
+            elif "+" not in ts_str and "-" not in ts_str[10:]:
+                ts_str = ts_str + "+00:00"
+            ts_str = ts_str.replace(" ", "T")
+            last_dt = datetime.fromisoformat(ts_str)
+            if last_dt.tzinfo is None:
+                last_dt = last_dt.replace(tzinfo=timezone.utc)
+            if (now_utc - last_dt).total_seconds() > 7200:
+                should_close = True
+        except Exception:
+            should_close = True
+
+        if should_close:
+            conn.execute("UPDATE sessions SET end_time=? WHERE id=?", (last_time_str or now_utc.isoformat(), sid))
+
+    conn.commit()
+    if close_at_end:
+        conn.close()
+
 
 
 def insert_activity(session_id, app_name, window_title, predicted_label):
@@ -118,10 +160,22 @@ def create_tables():
 def create_session():
     conn = get_connection()
     cur = conn.cursor()
+
+    # Close any unclosed sessions before starting a new one
+    unclosed = conn.execute("SELECT id, start_time FROM sessions WHERE end_time IS NULL").fetchall()
+    now_iso = datetime.now(timezone.utc).isoformat()
+    for sid, start_time in unclosed:
+        last_log = conn.execute(
+            "SELECT timestamp FROM activity_logs WHERE session_id=? ORDER BY id DESC LIMIT 1",
+            (sid,)
+        ).fetchone()
+        close_time = last_log[0] if last_log and last_log[0] else now_iso
+        conn.execute("UPDATE sessions SET end_time=? WHERE id=?", (close_time, sid))
+
     cur.execute("""
         INSERT INTO sessions (start_time)
         VALUES (?)
-    """, (datetime.now(timezone.utc).isoformat(),))
+    """, (now_iso,))
     session_id = cur.lastrowid
     conn.commit()
     conn.close()
@@ -208,6 +262,7 @@ def get_session_logs(session_id):
 
 
 def get_latest_session_id():
+    close_stale_sessions()
     conn = get_connection()
     row = conn.execute(
         "SELECT id, start_time FROM sessions WHERE end_time IS NULL ORDER BY id DESC LIMIT 1"
@@ -217,6 +272,7 @@ def get_latest_session_id():
 
 
 def get_latest_session():
+    close_stale_sessions()
     conn = get_connection()
     row = conn.execute(
         "SELECT id, start_time FROM sessions WHERE end_time IS NULL ORDER BY id DESC LIMIT 1"

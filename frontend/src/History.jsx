@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import LogTree from "./components/LogTree.jsx";
+import Heatbar from "./components/Heatbar.jsx";
 import ActionButton from "./components/ActionButton.jsx";
 import { getSessions, getSessionLogs, getSummary, deleteSession } from "./api.js";
-import { fmtDateTime, duration } from "./utils.js";
+import { fmtDateTime, duration, buildHeatbar } from "./utils.js";
 
 function SessionCard({ session, onDelete }) {
   const [open, setOpen] = useState(false);
@@ -111,19 +112,26 @@ function SessionCard({ session, onDelete }) {
       )}
 
       {open && (
-        <div style={{ borderTop: "1px solid #21262d", padding: "0.5rem" }}>
+        <div style={{ borderTop: "1px solid #21262d", padding: "0.75rem 1rem" }}>
           {rows === null ? (
-            <div style={{ color: "#484f58", fontSize: "0.75rem", padding: "1rem 1.25rem" }}>loading...</div>
+            <div style={{ color: "#484f58", fontSize: "0.75rem", padding: "0.5rem" }}>loading...</div>
           ) : (
-            <LogTree
-              sessionId={session.id}
-              rows={rows}
-              onChanged={() =>
-                getSessionLogs(session.id)
-                  .then((data) => setRows(Array.isArray(data) ? data : []))
-                  .catch(() => setRows([]))
-              }
-            />
+            <>
+              {rows.length > 0 && (
+                <div style={{ marginBottom: "1rem" }}>
+                  <Heatbar slices={buildHeatbar(rows)} height={18} />
+                </div>
+              )}
+              <LogTree
+                sessionId={session.id}
+                rows={rows}
+                onChanged={() =>
+                  getSessionLogs(session.id)
+                    .then((data) => setRows(Array.isArray(data) ? data : []))
+                    .catch(() => setRows([]))
+                }
+              />
+            </>
           )}
         </div>
       )}

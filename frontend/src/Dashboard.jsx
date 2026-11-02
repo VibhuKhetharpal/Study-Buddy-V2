@@ -32,7 +32,7 @@ export default function Dashboard() {
   const [showHeatbar, setShowHeatbar] = useState(true);
   const [activityView, setActivityView] = useState("hourly");
   const [backendError, setBackendError] = useState(false);
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
 
   // Live clock so duration updates every second without a network call
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function Dashboard() {
     setSummary(null);
     getSummary(sessionId)
       .then((d) => setSummary(d.summary || d.error || "No summary available"))
-      .catch(() => setSummary("Failed to connect to backend for summary"))
+      .catch((err) => setSummary(err.message || "Failed to generate summary"))
       .finally(() => setSummaryLoading(false));
   };
 
